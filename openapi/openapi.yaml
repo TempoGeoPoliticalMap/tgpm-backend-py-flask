@@ -1,0 +1,324 @@
+openapi: 3.0.3
+info:
+  title: TempoGeoPolitical Map RESTful API
+  version: 0.0.1
+servers:
+  - url: 'https://template.com'
+    description: Localhost
+security:
+  - JWT: []
+tags:
+  - name: Events
+    description: Historical Political Events APIs
+paths:
+  /v1/events:
+    get:
+      summary: List of Historical Political Events.
+      tags:
+        - Events
+      parameters:
+        - $ref: '#/components/parameters/Accept'
+        - $ref: '#/components/parameters/EventTypeListQueryParameter'
+        - $ref: '#/components/parameters/EventRegionListQueryParameter'
+        - $ref: '#/components/parameters/EventCountryListQueryParameter'
+        - $ref: '#/components/parameters/TimeslotEndDateQueryParameter'
+        - name: timeslot_end
+          in: query
+          description: Timeslot End Date/Time to filter by.
+          required: false
+          schema:
+            $ref: '#/components/schemas/DateTime'
+          example: '2022-05-30T18:20:00Z'
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventListResponseBody'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+components:
+  schemas:
+    EventType:
+      type: string
+      description: Type of an Event.
+      enum:
+        - elections
+        - war
+    EventTypeList:
+      type: array
+      description: List of Event Types to filter Events.
+      items:
+        $ref: '#/components/schemas/EventType'
+      maxItems: 1000
+    WikidataId:
+      type: string
+      description: 'Record ID of a data item in https://www.wikidata.org.'
+      example: Q30638578
+    EventName:
+      type: string
+      description: Name of a historical political Event.
+      example: 2022 French presidential election
+    Region:
+      type: string
+      description: World Region.
+      enum:
+        - east_asia_and_pacific
+        - europe_and_central_asia
+        - latin_america_and_caribbean
+        - middle_east_and_north_africa
+        - north_america
+        - south_asia
+        - sub_saharan_africa
+    RegionList:
+      type: array
+      description: List of World Regions to filter Events.
+      items:
+        $ref: '#/components/schemas/Region'
+      maxItems: 10
+    CountryCode:
+      type: string
+      description: Country Codes.
+    CountryCodeList:
+      type: array
+      description: List of Country Codes to filter Events.
+      items:
+        $ref: '#/components/schemas/CountryCode'
+      maxItems: 250
+    Country:
+      type: object
+      description: Information about a Country related to the Event.
+      properties:
+        wikidata-id:
+          $ref: '#/components/schemas/WikidataId'
+          example: Q142
+        name:
+          type: string
+          example: France
+    CountryList:
+      type: array
+      description: List of Countries related to the Event.
+      items:
+        $ref: '#/components/schemas/Country'
+      maxItems: 200
+    Location:
+      type: object
+      description: Information about a Location related to the Event.
+      properties:
+        wikidata-id:
+          $ref: '#/components/schemas/WikidataId'
+          example: Q90
+        name:
+          type: string
+          example: Paris
+        coodrinate:
+          type: string
+          example: '48.853410,2.348800'
+    LocationList:
+      type: array
+      description: List of Locations related to the Event.
+      items:
+        $ref: '#/components/schemas/Location'
+      maxItems: 200
+    DateTime:
+      type: string
+      description: 'Event timestamp; can be time or date, as well as month or year.'
+      format: date-time
+      example: '2021-01-30T08:30:00Z'
+    Event:
+      type: object
+      description: Historical political Event.
+      properties:
+        type:
+          $ref: '#/components/schemas/EventType'
+          example: elections
+        wikidata-id:
+          $ref: '#/components/schemas/WikidataId'
+        name:
+          $ref: '#/components/schemas/EventName'
+        countries:
+          $ref: '#/components/schemas/CountryList'
+        locations:
+          $ref: '#/components/schemas/LocationList'
+        start-time:
+          $ref: '#/components/schemas/DateTime'
+          example: 2022-04-10T00:00:00.000Z
+        end-time:
+          $ref: '#/components/schemas/DateTime'
+          example: 2022-04-24T00:00:00.000Z
+      required:
+        - type
+        - wikidata-id
+        - name
+        - countries
+        - start-time
+    EventResponseBody:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Event'
+    EventListResponseBody:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+          maxItems: 10000
+    BasicErrorObject:
+      type: object
+      properties:
+        id:
+          type: string
+          example: a1
+        status:
+          type: integer
+          description: 'The HTTP status code applicable to this problem, expressed as a string value.'
+        code:
+          type: integer
+          description: 'An application-specific error code, expressed as a string value.'
+        title:
+          type: string
+          description: 'A short, human-readable summary of the problem.'
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+        source:
+          type: string
+          description: An object containing references to the source of the error.
+    Error400:
+      allOf:
+        - $ref: '#/components/schemas/BasicErrorObject'
+        - type: object
+          properties:
+            status:
+              example: 400
+            title:
+              example: Bad request
+    Error401:
+      allOf:
+        - $ref: '#/components/schemas/BasicErrorObject'
+        - type: object
+          properties:
+            status:
+              example: 401
+            title:
+              example: Unauthorized
+    Error403:
+      allOf:
+        - $ref: '#/components/schemas/BasicErrorObject'
+        - type: object
+          properties:
+            status:
+              example: 403
+            title:
+              example: Forbidden
+    Error404:
+      allOf:
+        - $ref: '#/components/schemas/BasicErrorObject'
+        - type: object
+          properties:
+            status:
+              example: 404
+            title:
+              example: Not Found
+    Error409:
+      allOf:
+        - $ref: '#/components/schemas/BasicErrorObject'
+        - type: object
+          properties:
+            status:
+              example: 409
+            title:
+              example: Conflict
+    Error422:
+      allOf:
+        - $ref: '#/components/schemas/BasicErrorObject'
+        - type: object
+          properties:
+            status:
+              example: 422
+            title:
+              example: Unprocessable entity
+    Error429:
+      allOf:
+        - $ref: '#/components/schemas/BasicErrorObject'
+        - type: object
+          properties:
+            status:
+              example: 429
+            title:
+              example: Too many requests
+  parameters:
+    Accept:
+      name: Accept
+      in: header
+      description: Default accept header
+      required: false
+      schema:
+        type: string
+      example: application/json
+    EventTypeListQueryParameter:
+      name: types
+      in: query
+      description: 'Type(s) of an Event:<br> <ul> <li>`elections` - State elections, e.g. presidential, parliament etc.</li> <li>`war` - Wars or military conflicts.</li> </ul>'
+      required: false
+      schema:
+        $ref: '#/components/schemas/EventTypeList'
+      style: form
+      explode: false
+      example: 'elections,war'
+    EventRegionListQueryParameter:
+      name: regions
+      in: query
+      description: World Regions.<br> <ul> <li>`east_asia_and_pacific`</li> <li>`europe_and_central_asia`</li> <li>`latin_america_and_caribbean`</li> <li>`middle_east_and_north_africa`</li> <li>`north_america`</li> <li>`south_asia`</li> <li>`sub_saharan_africa`</li> </ul>
+      required: false
+      schema:
+        $ref: '#/components/schemas/RegionList'
+      style: form
+      explode: false
+      example: 'europe_and_central_asia,middle_east_and_north_africa'
+    EventCountryListQueryParameter:
+      name: countries
+      in: query
+      description: Country code(s) to filter Events by.
+      required: false
+      schema:
+        $ref: '#/components/schemas/CountryCodeList'
+      style: form
+      explode: false
+      example: 'fra,gbr'
+    TimeslotStartDateQueryParameter:
+      $ref: '#/components/parameters/TimeslotEndDateQueryParameter'
+    TimeslotEndDateQueryParameter:
+      name: timeslot_start
+      in: query
+      description: Timeslot Start Date/Time to filter by.
+      required: false
+      schema:
+        $ref: '#/components/schemas/DateTime'
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Access Token
+    JWTRefresh:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Refresh Token
+
