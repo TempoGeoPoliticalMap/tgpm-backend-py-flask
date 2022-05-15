@@ -19,11 +19,11 @@ class Model(object):
 
     @classmethod
     def from_dict(cls: typing.Type[T], dikt) -> T:
-        """Returns the dict as a model"""
+        """Returns the dict as a models"""
         return util.deserialize_model(dikt, cls)
 
     def to_dict(self):
-        """Returns the model properties as a dict
+        """Returns the models properties as a dict
 
         :rtype: dict
         """
@@ -50,7 +50,7 @@ class Model(object):
         return result
 
     def to_str(self):
-        """Returns the string representation of the model
+        """Returns the string representation of the models
 
         :rtype: str
         """

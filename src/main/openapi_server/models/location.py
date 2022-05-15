@@ -16,7 +16,7 @@ class Location(Model):
     """
 
     def __init__(self, wikidata_id=None, name=None, coodrinate=None):  # noqa: E501
-        """Location - a model defined in OpenAPI
+        """Location - a models defined in OpenAPI
 
         :param wikidata_id: The wikidata_id of this Location.  # noqa: E501
         :type wikidata_id: str
@@ -43,7 +43,7 @@ class Location(Model):
 
     @classmethod
     def from_dict(cls, dikt) -> 'Location':
-        """Returns the dict as a model
+        """Returns the dict as a models
 
         :param dikt: A dict.
         :type: dict

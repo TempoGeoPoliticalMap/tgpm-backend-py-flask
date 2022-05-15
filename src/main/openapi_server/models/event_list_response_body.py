@@ -19,7 +19,7 @@ class EventListResponseBody(Model):
     """
 
     def __init__(self, data=None):  # noqa: E501
-        """EventListResponseBody - a model defined in OpenAPI
+        """EventListResponseBody - a models defined in OpenAPI
 
         :param data: The data of this EventListResponseBody.  # noqa: E501
         :type data: List[Event]
@@ -36,7 +36,7 @@ class EventListResponseBody(Model):
 
     @classmethod
     def from_dict(cls, dikt) -> 'EventListResponseBody':
-        """Returns the dict as a model
+        """Returns the dict as a models
 
         :param dikt: A dict.
         :type: dict

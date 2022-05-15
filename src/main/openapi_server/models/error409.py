@@ -21,7 +21,7 @@ class Error409(Model):
     """
 
     def __init__(self, id=None, status=None, code=None, title=None, detail=None, source=None):  # noqa: E501
-        """Error409 - a model defined in OpenAPI
+        """Error409 - a models defined in OpenAPI
 
         :param id: The id of this Error409.  # noqa: E501
         :type id: str
@@ -63,7 +63,7 @@ class Error409(Model):
 
     @classmethod
     def from_dict(cls, dikt) -> 'Error409':
-        """Returns the dict as a model
+        """Returns the dict as a models
 
         :param dikt: A dict.
         :type: dict

@@ -22,7 +22,7 @@ class EventType(Model):
     WAR = "war"
 
     def __init__(self):  # noqa: E501
-        """EventType - a model defined in OpenAPI
+        """EventType - a models defined in OpenAPI
 
         """
         self.openapi_types = {
@@ -33,7 +33,7 @@ class EventType(Model):
 
     @classmethod
     def from_dict(cls, dikt) -> 'EventType':
-        """Returns the dict as a model
+        """Returns the dict as a models
 
         :param dikt: A dict.
         :type: dict

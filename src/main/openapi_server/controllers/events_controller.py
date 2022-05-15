@@ -6,6 +6,7 @@ from openapi_server.models.error403 import Error403  # noqa: E501
 from openapi_server.models.event_list_response_body import EventListResponseBody  # noqa: E501
 from openapi_server.models.event_type import EventType  # noqa: E501
 from openapi_server.models.region import Region  # noqa: E501
+from openapi_server.service import events_service  # noqa: E501
 from openapi_server import util
 
 
@@ -36,4 +37,10 @@ def v1_events_get(accept=None, types=None, regions=None, countries=None, timeslo
         regions = [Region.from_dict(d) for d in connexion.request.get_json()]  # noqa: E501
     timeslot_start = util.deserialize_datetime(timeslot_start)
     timeslot_end = util.deserialize_datetime(timeslot_end)
-    return 'do some magic!'
+
+    result = events_service.get_events()
+
+    for r in result:
+        print(r)
+
+    return result

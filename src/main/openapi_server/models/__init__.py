@@ -2,7 +2,7 @@
 
 # flake8: noqa
 from __future__ import absolute_import
-# import models into model package
+# import models into models package
 from openapi_server.models.basic_error_object import BasicErrorObject
 from openapi_server.models.country import Country
 from openapi_server.models.error400 import Error400

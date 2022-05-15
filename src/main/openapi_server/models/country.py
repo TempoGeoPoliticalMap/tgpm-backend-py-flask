@@ -16,7 +16,7 @@ class Country(Model):
     """
 
     def __init__(self, wikidata_id=None, name=None):  # noqa: E501
-        """Country - a model defined in OpenAPI
+        """Country - a models defined in OpenAPI
 
         :param wikidata_id: The wikidata_id of this Country.  # noqa: E501
         :type wikidata_id: str
@@ -38,7 +38,7 @@ class Country(Model):
 
     @classmethod
     def from_dict(cls, dikt) -> 'Country':
-        """Returns the dict as a model
+        """Returns the dict as a models
 
         :param dikt: A dict.
         :type: dict

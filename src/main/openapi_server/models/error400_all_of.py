@@ -16,7 +16,7 @@ class Error400AllOf(Model):
     """
 
     def __init__(self, status=None, title=None):  # noqa: E501
-        """Error400AllOf - a model defined in OpenAPI
+        """Error400AllOf - a models defined in OpenAPI
 
         :param status: The status of this Error400AllOf.  # noqa: E501
         :type status: object
@@ -38,7 +38,7 @@ class Error400AllOf(Model):
 
     @classmethod
     def from_dict(cls, dikt) -> 'Error400AllOf':
-        """Returns the dict as a model
+        """Returns the dict as a models
 
         :param dikt: A dict.
         :type: dict

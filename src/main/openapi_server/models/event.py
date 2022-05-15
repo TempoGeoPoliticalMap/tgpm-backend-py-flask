@@ -24,7 +24,7 @@ class Event(Model):
 
     def __init__(self, type=None, wikidata_id=None, name=None, countries=None, locations=None, start_time=None,
                  end_time=None):  # noqa: E501
-        """Event - a model defined in OpenAPI
+        """Event - a models defined in OpenAPI
 
         :param type: The type of this Event.  # noqa: E501
         :type type: EventType
@@ -71,7 +71,7 @@ class Event(Model):
 
     @classmethod
     def from_dict(cls, dikt) -> 'Event':
-        """Returns the dict as a model
+        """Returns the dict as a models
 
         :param dikt: A dict.
         :type: dict

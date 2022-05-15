@@ -16,7 +16,7 @@ class BasicErrorObject(Model):
     """
 
     def __init__(self, id=None, status=None, code=None, title=None, detail=None, source=None):  # noqa: E501
-        """BasicErrorObject - a model defined in OpenAPI
+        """BasicErrorObject - a models defined in OpenAPI
 
         :param id: The id of this BasicErrorObject.  # noqa: E501
         :type id: str
@@ -58,7 +58,7 @@ class BasicErrorObject(Model):
 
     @classmethod
     def from_dict(cls, dikt) -> 'BasicErrorObject':
-        """Returns the dict as a model
+        """Returns the dict as a models
 
         :param dikt: A dict.
         :type: dict

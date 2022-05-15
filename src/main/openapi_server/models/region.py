@@ -27,7 +27,7 @@ class Region(Model):
     SUB_SAHARAN_AFRICA = "sub_saharan_africa"
 
     def __init__(self):  # noqa: E501
-        """Region - a model defined in OpenAPI
+        """Region - a models defined in OpenAPI
 
         """
         self.openapi_types = {
@@ -38,7 +38,7 @@ class Region(Model):
 
     @classmethod
     def from_dict(cls, dikt) -> 'Region':
-        """Returns the dict as a model
+        """Returns the dict as a models
 
         :param dikt: A dict.
         :type: dict

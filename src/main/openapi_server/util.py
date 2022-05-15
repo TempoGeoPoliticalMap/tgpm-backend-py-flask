@@ -98,12 +98,12 @@ def deserialize_datetime(string):
 
 
 def deserialize_model(data, klass):
-    """Deserializes list or dict to model.
+    """Deserializes list or dict to models.
 
     :param data: dict, list.
     :type data: dict | list
     :param klass: class literal.
-    :return: model object.
+    :return: models object.
     """
     instance = klass()
 
