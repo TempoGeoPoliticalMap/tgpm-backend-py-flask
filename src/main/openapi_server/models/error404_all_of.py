@@ -1,12 +1,12 @@
 # coding: utf-8
 
 from __future__ import absolute_import
-from datetime import date, datetime  # noqa: F401
 
+from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
-from openapi_server.models.base_model_ import Model
 from openapi_server import util
+from openapi_server.models.base_model_ import Model
 
 
 class Error404AllOf(Model):
@@ -16,29 +16,23 @@ class Error404AllOf(Model):
     """
 
     def __init__(self, status=None, title=None):  # noqa: E501
-        """Error404AllOf - a models defined in OpenAPI
+        """Error404AllOf - a model defined in OpenAPI
 
         :param status: The status of this Error404AllOf.  # noqa: E501
         :type status: object
         :param title: The title of this Error404AllOf.  # noqa: E501
         :type title: object
         """
-        self.openapi_types = {
-            'status': object,
-            'title': object
-        }
+        self.openapi_types = {"status": object, "title": object}
 
-        self.attribute_map = {
-            'status': 'status',
-            'title': 'title'
-        }
+        self.attribute_map = {"status": "status", "title": "title"}
 
         self._status = status
         self._title = title
 
     @classmethod
-    def from_dict(cls, dikt) -> 'Error404AllOf':
-        """Returns the dict as a models
+    def from_dict(cls, dikt) -> "Error404AllOf":
+        """Returns the dict as a model
 
         :param dikt: A dict.
         :type: dict

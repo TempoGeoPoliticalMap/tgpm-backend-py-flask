@@ -1,12 +1,12 @@
 # coding: utf-8
 
 from __future__ import absolute_import
-from datetime import date, datetime  # noqa: F401
 
+from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
-from openapi_server.models.base_model_ import Model
 from openapi_server import util
+from openapi_server.models.base_model_ import Model
 
 
 class Country(Model):
@@ -16,29 +16,23 @@ class Country(Model):
     """
 
     def __init__(self, wikidata_id=None, name=None):  # noqa: E501
-        """Country - a models defined in OpenAPI
+        """Country - a model defined in OpenAPI
 
         :param wikidata_id: The wikidata_id of this Country.  # noqa: E501
         :type wikidata_id: str
         :param name: The name of this Country.  # noqa: E501
         :type name: str
         """
-        self.openapi_types = {
-            'wikidata_id': str,
-            'name': str
-        }
+        self.openapi_types = {"wikidata_id": str, "name": str}
 
-        self.attribute_map = {
-            'wikidata_id': 'wikidata-id',
-            'name': 'name'
-        }
+        self.attribute_map = {"wikidata_id": "wikidataId", "name": "name"}
 
         self._wikidata_id = wikidata_id
         self._name = name
 
     @classmethod
-    def from_dict(cls, dikt) -> 'Country':
-        """Returns the dict as a models
+    def from_dict(cls, dikt) -> "Country":
+        """Returns the dict as a model
 
         :param dikt: A dict.
         :type: dict
@@ -51,7 +45,6 @@ class Country(Model):
     def wikidata_id(self):
         """Gets the wikidata_id of this Country.
 
-        Record ID of a data item in https://www.wikidata.org.  # noqa: E501
 
         :return: The wikidata_id of this Country.
         :rtype: str
@@ -62,7 +55,6 @@ class Country(Model):
     def wikidata_id(self, wikidata_id):
         """Sets the wikidata_id of this Country.
 
-        Record ID of a data item in https://www.wikidata.org.  # noqa: E501
 
         :param wikidata_id: The wikidata_id of this Country.
         :type wikidata_id: str

@@ -1,17 +1,12 @@
 # coding: utf-8
 
 from __future__ import absolute_import
-from datetime import date, datetime  # noqa: F401
 
+from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
-from openapi_server.models.base_model_ import Model
-from openapi_server.models.basic_error_object import BasicErrorObject
-from openapi_server.models.error404_all_of import Error404AllOf
 from openapi_server import util
-
-from openapi_server.models.basic_error_object import BasicErrorObject  # noqa: E501
-from openapi_server.models.error404_all_of import Error404AllOf  # noqa: E501
+from openapi_server.models.base_model_ import Model
 
 
 class Error404(Model):
@@ -20,50 +15,52 @@ class Error404(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, id=None, status=None, code=None, title=None, detail=None, source=None):  # noqa: E501
-        """Error404 - a models defined in OpenAPI
+    def __init__(
+        self, id=None, code=None, detail=None, source=None, status=None, title=None
+    ):  # noqa: E501
+        """Error404 - a model defined in OpenAPI
 
         :param id: The id of this Error404.  # noqa: E501
         :type id: str
-        :param status: The status of this Error404.  # noqa: E501
-        :type status: object
         :param code: The code of this Error404.  # noqa: E501
         :type code: int
-        :param title: The title of this Error404.  # noqa: E501
-        :type title: object
         :param detail: The detail of this Error404.  # noqa: E501
         :type detail: str
         :param source: The source of this Error404.  # noqa: E501
         :type source: str
+        :param status: The status of this Error404.  # noqa: E501
+        :type status: object
+        :param title: The title of this Error404.  # noqa: E501
+        :type title: object
         """
         self.openapi_types = {
-            'id': str,
-            'status': object,
-            'code': int,
-            'title': object,
-            'detail': str,
-            'source': str
+            "id": str,
+            "code": int,
+            "detail": str,
+            "source": str,
+            "status": object,
+            "title": object,
         }
 
         self.attribute_map = {
-            'id': 'id',
-            'status': 'status',
-            'code': 'code',
-            'title': 'title',
-            'detail': 'detail',
-            'source': 'source'
+            "id": "id",
+            "code": "code",
+            "detail": "detail",
+            "source": "source",
+            "status": "status",
+            "title": "title",
         }
 
         self._id = id
-        self._status = status
         self._code = code
-        self._title = title
         self._detail = detail
         self._source = source
+        self._status = status
+        self._title = title
 
     @classmethod
-    def from_dict(cls, dikt) -> 'Error404':
-        """Returns the dict as a models
+    def from_dict(cls, dikt) -> "Error404":
+        """Returns the dict as a model
 
         :param dikt: A dict.
         :type: dict
@@ -94,27 +91,6 @@ class Error404(Model):
         self._id = id
 
     @property
-    def status(self):
-        """Gets the status of this Error404.
-
-
-        :return: The status of this Error404.
-        :rtype: object
-        """
-        return self._status
-
-    @status.setter
-    def status(self, status):
-        """Sets the status of this Error404.
-
-
-        :param status: The status of this Error404.
-        :type status: object
-        """
-
-        self._status = status
-
-    @property
     def code(self):
         """Gets the code of this Error404.
 
@@ -136,27 +112,6 @@ class Error404(Model):
         """
 
         self._code = code
-
-    @property
-    def title(self):
-        """Gets the title of this Error404.
-
-
-        :return: The title of this Error404.
-        :rtype: object
-        """
-        return self._title
-
-    @title.setter
-    def title(self, title):
-        """Sets the title of this Error404.
-
-
-        :param title: The title of this Error404.
-        :type title: object
-        """
-
-        self._title = title
 
     @property
     def detail(self):
@@ -203,3 +158,45 @@ class Error404(Model):
         """
 
         self._source = source
+
+    @property
+    def status(self):
+        """Gets the status of this Error404.
+
+
+        :return: The status of this Error404.
+        :rtype: object
+        """
+        return self._status
+
+    @status.setter
+    def status(self, status):
+        """Sets the status of this Error404.
+
+
+        :param status: The status of this Error404.
+        :type status: object
+        """
+
+        self._status = status
+
+    @property
+    def title(self):
+        """Gets the title of this Error404.
+
+
+        :return: The title of this Error404.
+        :rtype: object
+        """
+        return self._title
+
+    @title.setter
+    def title(self, title):
+        """Sets the title of this Error404.
+
+
+        :param title: The title of this Error404.
+        :type title: object
+        """
+
+        self._title = title

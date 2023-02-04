@@ -1,14 +1,12 @@
 # coding: utf-8
 
 from __future__ import absolute_import
-from datetime import date, datetime  # noqa: F401
 
+from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
-from openapi_server.models.base_model_ import Model
-from openapi_server.models.event import Event
 from openapi_server import util
-
+from openapi_server.models.base_model_ import Model
 from openapi_server.models.event import Event  # noqa: E501
 
 
@@ -19,24 +17,20 @@ class EventResponseBody(Model):
     """
 
     def __init__(self, data=None):  # noqa: E501
-        """EventResponseBody - a models defined in OpenAPI
+        """EventResponseBody - a model defined in OpenAPI
 
         :param data: The data of this EventResponseBody.  # noqa: E501
         :type data: Event
         """
-        self.openapi_types = {
-            'data': Event
-        }
+        self.openapi_types = {"data": Event}
 
-        self.attribute_map = {
-            'data': 'data'
-        }
+        self.attribute_map = {"data": "data"}
 
         self._data = data
 
     @classmethod
-    def from_dict(cls, dikt) -> 'EventResponseBody':
-        """Returns the dict as a models
+    def from_dict(cls, dikt) -> "EventResponseBody":
+        """Returns the dict as a model
 
         :param dikt: A dict.
         :type: dict

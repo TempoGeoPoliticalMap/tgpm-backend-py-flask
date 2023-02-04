@@ -23,6 +23,8 @@ openapi_server/models/error403.py
 openapi_server/models/error403_all_of.py
 openapi_server/models/error404.py
 openapi_server/models/error404_all_of.py
+openapi_server/models/error406.py
+openapi_server/models/error406_all_of.py
 openapi_server/models/error409.py
 openapi_server/models/error409_all_of.py
 openapi_server/models/error422.py

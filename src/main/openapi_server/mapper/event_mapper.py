@@ -3,7 +3,9 @@ from openapi_server.models import Event
 
 def event_dao_to_event(input_dict):
     event = Event()
-    event.wikidata_id = input_dict["item"]["value"].replace("http://www.wikidata.org/entity/", "")
+    event.wikidata_id = input_dict["item"]["value"].replace(
+        "http://www.wikidata.org/entity/", ""
+    )
     event.name = input_dict["itemLabel"]["value"]
 
     if "point_in_time" in input_dict:

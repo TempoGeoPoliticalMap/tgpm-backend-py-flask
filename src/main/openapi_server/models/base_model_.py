@@ -1,11 +1,11 @@
 import pprint
+import typing
 
 import six
-import typing
 
 from openapi_server import util
 
-T = typing.TypeVar('T')
+T = typing.TypeVar("T")
 
 
 class Model(object):
@@ -19,11 +19,11 @@ class Model(object):
 
     @classmethod
     def from_dict(cls: typing.Type[T], dikt) -> T:
-        """Returns the dict as a models"""
+        """Returns the dict as a model"""
         return util.deserialize_model(dikt, cls)
 
     def to_dict(self):
-        """Returns the models properties as a dict
+        """Returns the model properties as a dict
 
         :rtype: dict
         """
@@ -32,25 +32,27 @@ class Model(object):
         for attr, _ in six.iteritems(self.openapi_types):
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(map(
-                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
-                    value
-                ))
+                result[attr] = list(
+                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
+                )
             elif hasattr(value, "to_dict"):
                 result[attr] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(map(
-                    lambda item: (item[0], item[1].to_dict())
-                    if hasattr(item[1], "to_dict") else item,
-                    value.items()
-                ))
+                result[attr] = dict(
+                    map(
+                        lambda item: (item[0], item[1].to_dict())
+                        if hasattr(item[1], "to_dict")
+                        else item,
+                        value.items(),
+                    )
+                )
             else:
                 result[attr] = value
 
         return result
 
     def to_str(self):
-        """Returns the string representation of the models
+        """Returns the string representation of the model
 
         :rtype: str
         """

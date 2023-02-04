@@ -3,76 +3,25 @@ info:
   title: TempoGeoPolitical Map RESTful API
   version: 0.0.1
 servers:
-  - description: Localhost
-    url: https://template.com
-security:
-  - JWT: [ ]
+- description: Localhost
+  url: https://template.com
 tags:
-  - description: Historical Political Events APIs
-    name: Events
+- description: Historical Political Events APIs
+  name: Events
 paths:
   /v1/events:
     get:
       operationId: v1_events_get
       parameters:
-        - description: Default accept header
-          example: application/json
-          explode: false
-          in: header
-          name: Accept
-          required: false
-          schema:
-            type: string
-          style: simple
-        - description: Type(s) of an Event:<br> <ul> <li>`elections` - State elections,
-            e.g. presidential, parliament etc.</li> <li>`war` - Wars or military conflicts.</li>
-            </ul>
-          example: elections,war
-          explode: false
-          in: query
-          name: types
-          required: false
-          schema:
-            $ref: '#/components/schemas/EventTypeList'
-          style: form
-        - description: World Regions.<br> <ul> <li>`east_asia_and_pacific`</li> <li>`europe_and_central_asia`</li>
-            <li>`latin_america_and_caribbean`</li> <li>`middle_east_and_north_africa`</li>
-            <li>`north_america`</li> <li>`south_asia`</li> <li>`sub_saharan_africa`</li>
-            </ul>
-          example: europe_and_central_asia,middle_east_and_north_africa
-          explode: false
-          in: query
-          name: regions
-          required: false
-          schema:
-            $ref: '#/components/schemas/RegionList'
-          style: form
-        - description: Country code(s) to filter Events by.
-          example: fra,gbr
-          explode: false
-          in: query
-          name: countries
-          required: false
-          schema:
-            $ref: '#/components/schemas/CountryCodeList'
-          style: form
-        - description: Timeslot Start Date/Time to filter by.
-          explode: true
-          in: query
-          name: timeslot_start
-          required: false
-          schema:
-            $ref: '#/components/schemas/DateTime'
-          style: form
-        - description: Timeslot End Date/Time to filter by.
-          example: 2022-05-30T18:20:00Z
-          explode: true
-          in: query
-          name: timeslot_end
-          required: false
-          schema:
-            $ref: '#/components/schemas/DateTime'
-          style: form
+      - description: Default accept header
+        example: application/json
+        explode: false
+        in: header
+        name: Accept
+        required: false
+        schema:
+          type: string
+        style: simple
       responses:
         "200":
           content:
@@ -86,17 +35,46 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error400'
           description: Bad request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error401'
+          description: Unauthorized
         "403":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error403'
           description: Forbidden
-      security:
-        - JWT: [ ]
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+          description: Not Found
+        "406":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error406'
+          description: Not Acceptable
+        "429":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error429'
+          description: Too Many Requests
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasicErrorObject'
+          description: Unsuccessful Operation
+      security: []
       summary: List of Historical Political Events.
       tags:
-        - Events
+      - Events
       x-openapi-router-controller: openapi_server.controllers.events_controller
 components:
   parameters:
@@ -110,58 +88,11 @@ components:
       schema:
         type: string
       style: simple
-    EventTypeListQueryParameter:
-      description: Type(s) of an Event:<br> <ul> <li>`elections` - State elections,
-        e.g. presidential, parliament etc.</li> <li>`war` - Wars or military conflicts.</li>
-        </ul>
-      example: elections,war
-      explode: false
-      in: query
-      name: types
-      required: false
-      schema:
-        $ref: '#/components/schemas/EventTypeList'
-      style: form
-    EventRegionListQueryParameter:
-      description: World Regions.<br> <ul> <li>`east_asia_and_pacific`</li> <li>`europe_and_central_asia`</li>
-        <li>`latin_america_and_caribbean`</li> <li>`middle_east_and_north_africa`</li>
-        <li>`north_america`</li> <li>`south_asia`</li> <li>`sub_saharan_africa`</li>
-        </ul>
-      example: europe_and_central_asia,middle_east_and_north_africa
-      explode: false
-      in: query
-      name: regions
-      required: false
-      schema:
-        $ref: '#/components/schemas/RegionList'
-      style: form
-    EventCountryListQueryParameter:
-      description: Country code(s) to filter Events by.
-      example: fra,gbr
-      explode: false
-      in: query
-      name: countries
-      required: false
-      schema:
-        $ref: '#/components/schemas/CountryCodeList'
-      style: form
-    TimeslotStartDateQueryParameter:
-      $ref: '#/components/parameters/TimeslotEndDateQueryParameter'
-    TimeslotEndDateQueryParameter:
-      description: Timeslot Start Date/Time to filter by.
-      explode: true
-      in: query
-      name: timeslot_start
-      required: false
-      schema:
-        $ref: '#/components/schemas/DateTime'
-      style: form
   schemas:
     EventType:
       description: Type of an Event.
       enum:
-        - elections
-        - war
+      - WARFARE_AND_ARMED_CONFLICTS
       title: EventType
       type: string
     EventTypeList:
@@ -172,25 +103,23 @@ components:
       type: array
     WikidataId:
       description: Record ID of a data item in https://www.wikidata.org.
-      example: Q30638578
-      title: wikidata-id
+      example: Q178810
       type: string
     EventName:
       description: Name of a historical political Event.
-      example: 2022 French presidential election
+      example: Syrian Civil War
       title: name
       type: string
     Region:
       description: World Region.
       enum:
-        - east_asia_and_pacific
-        - europe_and_central_asia
-        - latin_america_and_caribbean
-        - middle_east_and_north_africa
-        - north_america
-        - south_asia
-        - sub_saharan_africa
-      title: Region
+      - east_asia_and_pacific
+      - europe_and_central_asia
+      - latin_america_and_caribbean
+      - middle_east_and_north_africa
+      - north_america
+      - south_asia
+      - sub_saharan_africa
       type: string
     RegionList:
       description: List of World Regions to filter Events.
@@ -200,7 +129,6 @@ components:
       type: array
     CountryCode:
       description: Country Codes.
-      title: CountryCode
       type: string
     CountryCodeList:
       description: List of Country Codes to filter Events.
@@ -210,17 +138,14 @@ components:
       type: array
     Country:
       description: Information about a Country related to the Event.
-      example:
-        wikidata-id: Q30638578
-        name: France
       properties:
-        wikidata-id:
-          description: Record ID of a data item in https://www.wikidata.org.
-          example: Q30638578
-          title: wikidata-id
-          type: string
+        wikidataId:
+          allOf:
+          - $ref: '#/components/schemas/WikidataId'
+          - example: Q858
+          title: wikidataId
         name:
-          example: France
+          example: Syria
           title: name
           type: string
       title: Country
@@ -230,26 +155,21 @@ components:
       items:
         $ref: '#/components/schemas/Country'
       maxItems: 200
-      title: countries
       type: array
     Location:
       description: Information about a Location related to the Event.
-      example:
-        coodrinate: 48.853410,2.348800
-        wikidata-id: Q30638578
-        name: Paris
       properties:
-        wikidata-id:
-          description: Record ID of a data item in https://www.wikidata.org.
-          example: Q30638578
-          title: wikidata-id
-          type: string
+        wikidataId:
+          allOf:
+          - $ref: '#/components/schemas/WikidataId'
+          - example: Q858
+          title: wikidataId
         name:
-          example: Paris
+          example: Syria
           title: name
           type: string
         coodrinate:
-          example: 48.853410,2.348800
+          example: 39.3112722,-102.2917972
           title: coodrinate
           type: string
       title: Location
@@ -259,93 +179,80 @@ components:
       items:
         $ref: '#/components/schemas/Location'
       maxItems: 200
-      title: locations
       type: array
     DateTime:
       description: Event timestamp; can be time or date, as well as month or year.
-      example: 2021-01-30T08:30:00Z
-      format: date-time
-      title: start-time
+      format: dateTime
       type: string
     Event:
       description: Historical political Event.
       example:
-        start-time: 2021-01-30T08:30:00Z
-        wikidata-id: Q30638578
-        end-time: 2021-01-30T08:30:00Z
-        name: 2022 French presidential election
-        locations:
-          - coodrinate: 48.853410,2.348800
-            wikidata-id: Q30638578
-            name: Paris
-          - coodrinate: 48.853410,2.348800
-            wikidata-id: Q30638578
-            name: Paris
-          - coodrinate: 48.853410,2.348800
-            wikidata-id: Q30638578
-            name: Paris
-          - coodrinate: 48.853410,2.348800
-            wikidata-id: Q30638578
-            name: Paris
-          - coodrinate: 48.853410,2.348800
-            wikidata-id: Q30638578
-            name: Paris
-        countries:
-          - wikidata-id: Q30638578
-            name: France
-          - wikidata-id: Q30638578
-            name: France
-          - wikidata-id: Q30638578
-            name: France
-          - wikidata-id: Q30638578
-            name: France
-          - wikidata-id: Q30638578
-            name: France
+        wikidataId: ""
+        name: Syrian Civil War
+        locations: ""
+        startTime: ""
+        countries: ""
+        endTime: ""
+        type: ""
+        timeStateRelativeToNow: ""
       properties:
         type:
-          $ref: '#/components/schemas/EventType'
-        wikidata-id:
-          description: Record ID of a data item in https://www.wikidata.org.
-          example: Q30638578
-          title: wikidata-id
-          type: string
+          allOf:
+          - $ref: '#/components/schemas/EventType'
+          - example: WARFARE_AND_ARMED_CONFLICTS
+          title: type
+        wikidataId:
+          allOf:
+          - $ref: '#/components/schemas/WikidataId'
+          title: wikidataId
         name:
           description: Name of a historical political Event.
-          example: 2022 French presidential election
+          example: Syrian Civil War
           title: name
           type: string
         countries:
-          description: List of Countries related to the Event.
-          items:
-            $ref: '#/components/schemas/Country'
-          maxItems: 200
+          allOf:
+          - $ref: '#/components/schemas/CountryList'
+          - example:
+            - wikidataId: Q858
+              name: Syria
           title: countries
-          type: array
         locations:
-          description: List of Locations related to the Event.
-          items:
-            $ref: '#/components/schemas/Location'
-          maxItems: 200
+          allOf:
+          - $ref: '#/components/schemas/LocationList'
+          - example:
+            - wikidataId: Q858
+              name: Syria
+              coodrinate: 39.3112722,-102.2917972
           title: locations
-          type: array
-        start-time:
-          description: Event timestamp; can be time or date, as well as month or year.
-          example: 2021-01-30T08:30:00Z
-          format: date-time
-          title: start-time
-          type: string
-        end-time:
-          description: Event timestamp; can be time or date, as well as month or year.
-          example: 2021-01-30T08:30:00Z
-          format: date-time
-          title: start-time
-          type: string
+        timeStateRelativeToNow:
+          allOf:
+          - description: Indicates wherether event is in past, happens now or will
+              occur in future.
+            enum:
+            - PAST
+            - ONGOING
+            - FUTURE
+            type: string
+          - example: ONGOING
+          title: timeStateRelativeToNow
+        startTime:
+          allOf:
+          - $ref: '#/components/schemas/DateTime'
+          - example: 2011-03-15T00:00:00.000Z
+          title: startTime
+        endTime:
+          allOf:
+          - $ref: '#/components/schemas/DateTime'
+          - {}
+          title: endTime
       required:
-        - countries
-        - name
-        - start-time
-        - type
-        - wikidata-id
+      - countries
+      - name
+      - startTime
+      - timeStateRelativeToNow
+      - type
+      - wikidataId
       title: Event
       type: object
     EventResponseBody:
@@ -356,161 +263,46 @@ components:
     EventListResponseBody:
       example:
         data:
-          - start-time: 2021-01-30T08:30:00Z
-            wikidata-id: Q30638578
-            end-time: 2021-01-30T08:30:00Z
-            name: 2022 French presidential election
-            locations:
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-            countries:
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-          - start-time: 2021-01-30T08:30:00Z
-            wikidata-id: Q30638578
-            end-time: 2021-01-30T08:30:00Z
-            name: 2022 French presidential election
-            locations:
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-            countries:
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-          - start-time: 2021-01-30T08:30:00Z
-            wikidata-id: Q30638578
-            end-time: 2021-01-30T08:30:00Z
-            name: 2022 French presidential election
-            locations:
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-            countries:
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-          - start-time: 2021-01-30T08:30:00Z
-            wikidata-id: Q30638578
-            end-time: 2021-01-30T08:30:00Z
-            name: 2022 French presidential election
-            locations:
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-            countries:
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-          - start-time: 2021-01-30T08:30:00Z
-            wikidata-id: Q30638578
-            end-time: 2021-01-30T08:30:00Z
-            name: 2022 French presidential election
-            locations:
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-              - coodrinate: 48.853410,2.348800
-                wikidata-id: Q30638578
-                name: Paris
-            countries:
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
-              - wikidata-id: Q30638578
-                name: France
+        - wikidataId: ""
+          name: Syrian Civil War
+          locations: ""
+          startTime: ""
+          countries: ""
+          endTime: ""
+          type: ""
+          timeStateRelativeToNow: ""
+        - wikidataId: ""
+          name: Syrian Civil War
+          locations: ""
+          startTime: ""
+          countries: ""
+          endTime: ""
+          type: ""
+          timeStateRelativeToNow: ""
+        - wikidataId: ""
+          name: Syrian Civil War
+          locations: ""
+          startTime: ""
+          countries: ""
+          endTime: ""
+          type: ""
+          timeStateRelativeToNow: ""
+        - wikidataId: ""
+          name: Syrian Civil War
+          locations: ""
+          startTime: ""
+          countries: ""
+          endTime: ""
+          type: ""
+          timeStateRelativeToNow: ""
+        - wikidataId: ""
+          name: Syrian Civil War
+          locations: ""
+          startTime: ""
+          countries: ""
+          endTime: ""
+          type: ""
+          timeStateRelativeToNow: ""
       properties:
         data:
           items:
@@ -526,19 +318,10 @@ components:
           example: a1
           title: id
           type: string
-        status:
-          description: The HTTP status code applicable to this problem, expressed
-            as a string value.
-          title: status
-          type: integer
         code:
           description: An application-specific error code, expressed as a string value.
           title: code
           type: integer
-        title:
-          description: A short, human-readable summary of the problem.
-          title: title
-          type: string
         detail:
           description: A human-readable explanation specific to this occurrence of
             the problem.
@@ -552,34 +335,42 @@ components:
       type: object
     Error400:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error400_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error400_allOf'
       title: Error400
     Error401:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error401_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error401_allOf'
+      title: Error401
     Error403:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error403_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error403_allOf'
       title: Error403
     Error404:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error404_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error404_allOf'
+      title: Error404
+    Error406:
+      allOf:
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error406_allOf'
+      title: Error406
     Error409:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error409_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error409_allOf'
     Error422:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error422_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error422_allOf'
     Error429:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error429_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error429_allOf'
+      title: Error429
     Error400_allOf:
       properties:
         status:
@@ -620,6 +411,16 @@ components:
           title: title
       title: Error404_allOf
       type: object
+    Error406_allOf:
+      properties:
+        status:
+          example: 406
+          title: status
+        title:
+          example: Not Acceptable
+          title: title
+      title: Error406_allOf
+      type: object
     Error409_allOf:
       properties:
         status:
@@ -650,16 +451,3 @@ components:
           title: title
       title: Error429_allOf
       type: object
-  securitySchemes:
-    JWT:
-      bearerFormat: JWT
-      description: Access Token
-      scheme: bearer
-      type: http
-      x-bearerInfoFunc: openapi_server.controllers.security_controller_.info_from_JWT
-    JWTRefresh:
-      bearerFormat: JWT
-      description: Refresh Token
-      scheme: bearer
-      type: http
-      x-bearerInfoFunc: openapi_server.controllers.security_controller_.info_from_JWTRefresh

@@ -1,12 +1,12 @@
 # coding: utf-8
 
 from __future__ import absolute_import
-from datetime import date, datetime  # noqa: F401
 
+from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
-from openapi_server.models.base_model_ import Model
 from openapi_server import util
+from openapi_server.models.base_model_ import Model
 
 
 class Location(Model):
@@ -16,7 +16,7 @@ class Location(Model):
     """
 
     def __init__(self, wikidata_id=None, name=None, coodrinate=None):  # noqa: E501
-        """Location - a models defined in OpenAPI
+        """Location - a model defined in OpenAPI
 
         :param wikidata_id: The wikidata_id of this Location.  # noqa: E501
         :type wikidata_id: str
@@ -25,16 +25,12 @@ class Location(Model):
         :param coodrinate: The coodrinate of this Location.  # noqa: E501
         :type coodrinate: str
         """
-        self.openapi_types = {
-            'wikidata_id': str,
-            'name': str,
-            'coodrinate': str
-        }
+        self.openapi_types = {"wikidata_id": str, "name": str, "coodrinate": str}
 
         self.attribute_map = {
-            'wikidata_id': 'wikidata-id',
-            'name': 'name',
-            'coodrinate': 'coodrinate'
+            "wikidata_id": "wikidataId",
+            "name": "name",
+            "coodrinate": "coodrinate",
         }
 
         self._wikidata_id = wikidata_id
@@ -42,8 +38,8 @@ class Location(Model):
         self._coodrinate = coodrinate
 
     @classmethod
-    def from_dict(cls, dikt) -> 'Location':
-        """Returns the dict as a models
+    def from_dict(cls, dikt) -> "Location":
+        """Returns the dict as a model
 
         :param dikt: A dict.
         :type: dict
@@ -56,7 +52,6 @@ class Location(Model):
     def wikidata_id(self):
         """Gets the wikidata_id of this Location.
 
-        Record ID of a data item in https://www.wikidata.org.  # noqa: E501
 
         :return: The wikidata_id of this Location.
         :rtype: str
@@ -67,7 +62,6 @@ class Location(Model):
     def wikidata_id(self, wikidata_id):
         """Sets the wikidata_id of this Location.
 
-        Record ID of a data item in https://www.wikidata.org.  # noqa: E501
 
         :param wikidata_id: The wikidata_id of this Location.
         :type wikidata_id: str

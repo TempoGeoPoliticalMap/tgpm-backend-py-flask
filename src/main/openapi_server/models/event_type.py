@@ -1,12 +1,12 @@
 # coding: utf-8
 
 from __future__ import absolute_import
-from datetime import date, datetime  # noqa: F401
 
+from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
-from openapi_server.models.base_model_ import Model
 from openapi_server import util
+from openapi_server.models.base_model_ import Model
 
 
 class EventType(Model):
@@ -18,22 +18,17 @@ class EventType(Model):
     """
     allowed enum values
     """
-    ELECTIONS = "elections"
-    WAR = "war"
+    WARFARE_AND_ARMED_CONFLICTS = "WARFARE_AND_ARMED_CONFLICTS"
 
     def __init__(self):  # noqa: E501
-        """EventType - a models defined in OpenAPI
+        """EventType - a model defined in OpenAPI"""
+        self.openapi_types = {}
 
-        """
-        self.openapi_types = {
-        }
-
-        self.attribute_map = {
-        }
+        self.attribute_map = {}
 
     @classmethod
-    def from_dict(cls, dikt) -> 'EventType':
-        """Returns the dict as a models
+    def from_dict(cls, dikt) -> "EventType":
+        """Returns the dict as a model
 
         :param dikt: A dict.
         :type: dict
