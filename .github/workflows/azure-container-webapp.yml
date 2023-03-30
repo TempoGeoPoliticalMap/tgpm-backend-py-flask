@@ -27,7 +27,7 @@
 name: Build and deploy a container to an Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: Microsoft.Web-WebApp-Portal-610ba38c-88b3  # set this to the name of your Azure Web App
+  AZURE_WEBAPP_NAME: tgpm-backend-py-flask  # set this to the name of your Azure Web App
 
 on:
   push:
