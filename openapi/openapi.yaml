@@ -1,10 +1,10 @@
 openapi: 3.0.3
 info:
-  title: TempoGeoPolitical Map RESTful API
+  title: TempoGeoPoliticalMap RESTful API
   version: 0.0.1
 servers:
-  - url: 'https://template.com'
-    description: Localhost
+  - url: 'https://tgpm-backend-py-flask.azurewebsites.net'
+    description: Production (temp. URL)
 security: []
 tags:
   - name: Events

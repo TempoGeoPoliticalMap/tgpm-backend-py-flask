@@ -18,10 +18,10 @@ REQUIRES = ["connexion>=2.0.2", "swagger-ui-bundle>=0.0.2", "python_dateutil>=2.
 setup(
     name=NAME,
     version=VERSION,
-    description="TempoGeoPolitical Map RESTful API",
+    description="TempoGeoPoliticalMap RESTful API",
     author_email="",
     url="",
-    keywords=["OpenAPI", "TempoGeoPolitical Map RESTful API"],
+    keywords=["OpenAPI", "TempoGeoPoliticalMap RESTful API"],
     install_requires=REQUIRES,
     packages=find_packages(),
     package_data={"": ["openapi/openapi.yaml"]},
