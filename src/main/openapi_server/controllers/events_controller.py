@@ -1,7 +1,7 @@
 import connexion
 import six
 
-import events_service
+from openapi_server.service import events_service
 from openapi_server.models.basic_error_object import BasicErrorObject  # noqa: E501
 from openapi_server.models.error400 import Error400  # noqa: E501
 from openapi_server.models.error401 import Error401  # noqa: E501
