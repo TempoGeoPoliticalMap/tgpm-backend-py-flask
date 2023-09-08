@@ -3,93 +3,114 @@ info:
   title: TempoGeoPoliticalMap RESTful API
   version: 0.0.1
 servers:
-  - url: 'https://tgpm-backend-py-flask.azurewebsites.net'
-    description: Production (temp. URL)
-security: []
+  - description: Production
+    url: https://api.tgpm.world
 tags:
-  - name: Events
-    description: Historical Political Events APIs
+  - description: Historical Political Events APIs
+    name: Events
 paths:
   /v1/events:
     get:
-      summary: List of Historical Political Events.
-      tags:
-        - Events
+      operationId: v1_events_get
       parameters:
-        - $ref: '#/components/parameters/Accept'
-      security: []
+        - description: Default accept header
+          example: application/json
+          explode: false
+          in: header
+          name: Accept
+          required: false
+          schema:
+            type: string
+          style: simple
       responses:
-        '200':
-          description: ok
+        "200":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/EventListResponseBody'
-        '400':
-          description: Bad request
+          description: ok
+        "400":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error400'
-        '401':
-          description: Unauthorized
+          description: Bad request
+        "401":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error401'
-        '403':
-          description: Forbidden
+          description: Unauthorized
+        "403":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error403'
-        '404':
-          description: Not Found
+          description: Forbidden
+        "404":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error404'
-        '406':
-          description: Not Acceptable
+          description: Not Found
+        "406":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error406'
-        '429':
-          description: Too Many Requests
+          description: Not Acceptable
+        "429":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error429'
+          description: Too Many Requests
         default:
-          description: Unsuccessful Operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/BasicErrorObject'
+          description: Unsuccessful Operation
+      security: [ ]
+      summary: List of Historical Political Events.
+      tags:
+        - Events
+      x-openapi-router-controller: openapi_server.controllers.events_controller
 components:
+  parameters:
+    Accept:
+      description: Default accept header
+      example: application/json
+      explode: false
+      in: header
+      name: Accept
+      required: false
+      schema:
+        type: string
+      style: simple
   schemas:
     EventType:
-      type: string
       description: Type of an Event.
       enum:
         - WARFARE_AND_ARMED_CONFLICTS
+      title: EventType
+      type: string
     EventTypeList:
-      type: array
       description: List of Event Types to filter Events.
       items:
         $ref: '#/components/schemas/EventType'
       maxItems: 1000
+      type: array
     WikidataId:
-      type: string
-      description: 'Record ID of a data item in https://www.wikidata.org.'
+      description: Record ID of a data item in https://www.wikidata.org.
       example: Q178810
-    EventName:
       type: string
+    EventName:
       description: Name of a historical political Event.
       example: Syrian Civil War
-    Region:
+      title: name
       type: string
+    Region:
       description: World Region.
       enum:
         - east_asia_and_pacific
@@ -99,219 +120,334 @@ components:
         - north_america
         - south_asia
         - sub_saharan_africa
+      type: string
     RegionList:
-      type: array
       description: List of World Regions to filter Events.
       items:
         $ref: '#/components/schemas/Region'
       maxItems: 10
-    CountryCode:
-      type: string
-      description: Country Codes.
-    CountryCodeList:
       type: array
+    CountryCode:
+      description: Country Codes.
+      type: string
+    CountryCodeList:
       description: List of Country Codes to filter Events.
       items:
         $ref: '#/components/schemas/CountryCode'
       maxItems: 250
+      type: array
     Country:
-      type: object
       description: Information about a Country related to the Event.
       properties:
         wikidataId:
           allOf:
             - $ref: '#/components/schemas/WikidataId'
             - example: Q858
+          title: wikidataId
         name:
-          type: string
           example: Syria
+          title: name
+          type: string
+      title: Country
+      type: object
     CountryList:
-      type: array
       description: List of Countries related to the Event.
       items:
         $ref: '#/components/schemas/Country'
       maxItems: 200
+      type: array
     Location:
-      type: object
       description: Information about a Location related to the Event.
       properties:
         wikidataId:
           allOf:
             - $ref: '#/components/schemas/WikidataId'
             - example: Q858
+          title: wikidataId
         name:
-          type: string
           example: Syria
-        coodrinate:
+          title: name
           type: string
-          example: '39.3112722,-102.2917972'
+        coodrinate:
+          example: 39.3112722,-102.2917972
+          title: coodrinate
+          type: string
+      title: Location
+      type: object
     LocationList:
-      type: array
       description: List of Locations related to the Event.
       items:
         $ref: '#/components/schemas/Location'
       maxItems: 200
+      type: array
     DateTime:
-      type: string
-      description: 'Event timestamp; can be time or date, as well as month or year.'
+      description: Event timestamp; can be time or date, as well as month or year.
       format: dateTime
+      type: string
     Event:
-      type: object
       description: Historical political Event.
+      example:
+        wikidataId: ""
+        name: Syrian Civil War
+        locations: ""
+        startTime: ""
+        countries: ""
+        endTime: ""
+        type: ""
+        timeStateRelativeToNow: ""
       properties:
         type:
           allOf:
             - $ref: '#/components/schemas/EventType'
             - example: WARFARE_AND_ARMED_CONFLICTS
+          title: type
         wikidataId:
           allOf:
             - $ref: '#/components/schemas/WikidataId'
+          title: wikidataId
         name:
-          $ref: '#/components/schemas/EventName'
+          description: Name of a historical political Event.
+          example: Syrian Civil War
+          title: name
+          type: string
         countries:
           allOf:
             - $ref: '#/components/schemas/CountryList'
             - example:
                 - wikidataId: Q858
                   name: Syria
+          title: countries
         locations:
           allOf:
             - $ref: '#/components/schemas/LocationList'
             - example:
                 - wikidataId: Q858
                   name: Syria
-                  coodrinate: '39.3112722,-102.2917972'
+                  coodrinate: 39.3112722,-102.2917972
+          title: locations
         timeStateRelativeToNow:
           allOf:
-            - type: string
-              description: 'Indicates wherether event is in past, happens now or will occur in future.'
+            - description: Indicates wherether event is in past, happens now or will
+                occur in future.
               enum:
                 - PAST
                 - ONGOING
                 - FUTURE
+              type: string
             - example: ONGOING
+          title: timeStateRelativeToNow
         startTime:
           allOf:
             - $ref: '#/components/schemas/DateTime'
             - example: 2011-03-15T00:00:00.000Z
+          title: startTime
         endTime:
           allOf:
             - $ref: '#/components/schemas/DateTime'
-            - example: null
+            - { }
+          title: endTime
       required:
+        - countries
+        - name
+        - startTime
+        - timeStateRelativeToNow
         - type
         - wikidataId
-        - name
-        - countries
-        - timeStateRelativeToNow
-        - startTime
-    EventResponseBody:
+      title: Event
       type: object
+    EventResponseBody:
       properties:
         data:
           $ref: '#/components/schemas/Event'
-    EventListResponseBody:
       type: object
+    EventListResponseBody:
+      example:
+        data:
+          - wikidataId: ""
+            name: Syrian Civil War
+            locations: ""
+            startTime: ""
+            countries: ""
+            endTime: ""
+            type: ""
+            timeStateRelativeToNow: ""
+          - wikidataId: ""
+            name: Syrian Civil War
+            locations: ""
+            startTime: ""
+            countries: ""
+            endTime: ""
+            type: ""
+            timeStateRelativeToNow: ""
+          - wikidataId: ""
+            name: Syrian Civil War
+            locations: ""
+            startTime: ""
+            countries: ""
+            endTime: ""
+            type: ""
+            timeStateRelativeToNow: ""
+          - wikidataId: ""
+            name: Syrian Civil War
+            locations: ""
+            startTime: ""
+            countries: ""
+            endTime: ""
+            type: ""
+            timeStateRelativeToNow: ""
+          - wikidataId: ""
+            name: Syrian Civil War
+            locations: ""
+            startTime: ""
+            countries: ""
+            endTime: ""
+            type: ""
+            timeStateRelativeToNow: ""
       properties:
         data:
-          type: array
           items:
             $ref: '#/components/schemas/Event'
           maxItems: 10000
-    BasicErrorObject:
+          title: data
+          type: array
+      title: EventListResponseBody
       type: object
+    BasicErrorObject:
       properties:
         id:
-          type: string
           example: a1
+          title: id
+          type: string
         code:
+          description: An application-specific error code, expressed as a string value.
+          title: code
           type: integer
-          description: 'An application-specific error code, expressed as a string value.'
         detail:
+          description: A human-readable explanation specific to this occurrence of
+            the problem.
+          title: detail
           type: string
-          description: A human-readable explanation specific to this occurrence of the problem.
         source:
-          type: string
           description: An object containing references to the source of the error.
+          title: source
+          type: string
+      title: BasicErrorObject
+      type: object
     Error400:
       allOf:
         - $ref: '#/components/schemas/BasicErrorObject'
-        - type: object
-          properties:
-            status:
-              example: 400
-            title:
-              example: Bad request
+        - $ref: '#/components/schemas/Error400_allOf'
+      title: Error400
     Error401:
       allOf:
         - $ref: '#/components/schemas/BasicErrorObject'
-        - type: object
-          properties:
-            status:
-              example: 401
-            title:
-              example: Unauthorized
+        - $ref: '#/components/schemas/Error401_allOf'
+      title: Error401
     Error403:
       allOf:
         - $ref: '#/components/schemas/BasicErrorObject'
-        - type: object
-          properties:
-            status:
-              example: 403
-            title:
-              example: Forbidden
+        - $ref: '#/components/schemas/Error403_allOf'
+      title: Error403
     Error404:
       allOf:
         - $ref: '#/components/schemas/BasicErrorObject'
-        - type: object
-          properties:
-            status:
-              example: 404
-            title:
-              example: Not Found
+        - $ref: '#/components/schemas/Error404_allOf'
+      title: Error404
     Error406:
       allOf:
         - $ref: '#/components/schemas/BasicErrorObject'
-        - type: object
-          properties:
-            status:
-              example: 406
-            title:
-              example: Not Acceptable
+        - $ref: '#/components/schemas/Error406_allOf'
+      title: Error406
     Error409:
       allOf:
         - $ref: '#/components/schemas/BasicErrorObject'
-        - type: object
-          properties:
-            status:
-              example: 409
-            title:
-              example: Conflict
+        - $ref: '#/components/schemas/Error409_allOf'
     Error422:
       allOf:
         - $ref: '#/components/schemas/BasicErrorObject'
-        - type: object
-          properties:
-            status:
-              example: 422
-            title:
-              example: Unprocessable entity
+        - $ref: '#/components/schemas/Error422_allOf'
     Error429:
       allOf:
         - $ref: '#/components/schemas/BasicErrorObject'
-        - type: object
-          properties:
-            status:
-              example: 429
-            title:
-              example: Too many requests
-  parameters:
-    Accept:
-      name: Accept
-      in: header
-      description: Default accept header
-      required: false
-      schema:
-        type: string
-      example: application/json
-
+        - $ref: '#/components/schemas/Error429_allOf'
+      title: Error429
+    Error400_allOf:
+      properties:
+        status:
+          example: 400
+          title: status
+        title:
+          example: Bad request
+          title: title
+      title: Error400_allOf
+      type: object
+    Error401_allOf:
+      properties:
+        status:
+          example: 401
+          title: status
+        title:
+          example: Unauthorized
+          title: title
+      title: Error401_allOf
+      type: object
+    Error403_allOf:
+      properties:
+        status:
+          example: 403
+          title: status
+        title:
+          example: Forbidden
+          title: title
+      title: Error403_allOf
+      type: object
+    Error404_allOf:
+      properties:
+        status:
+          example: 404
+          title: status
+        title:
+          example: Not Found
+          title: title
+      title: Error404_allOf
+      type: object
+    Error406_allOf:
+      properties:
+        status:
+          example: 406
+          title: status
+        title:
+          example: Not Acceptable
+          title: title
+      title: Error406_allOf
+      type: object
+    Error409_allOf:
+      properties:
+        status:
+          example: 409
+          title: status
+        title:
+          example: Conflict
+          title: title
+      title: Error409_allOf
+      type: object
+    Error422_allOf:
+      properties:
+        status:
+          example: 422
+          title: status
+        title:
+          example: Unprocessable entity
+          title: title
+      title: Error422_allOf
+      type: object
+    Error429_allOf:
+      properties:
+        status:
+          example: 429
+          title: status
+        title:
+          example: Too many requests
+          title: title
+      title: Error429_allOf
+      type: object

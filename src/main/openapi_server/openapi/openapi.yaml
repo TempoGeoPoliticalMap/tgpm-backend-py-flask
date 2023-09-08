@@ -3,11 +3,11 @@ info:
   title: TempoGeoPoliticalMap RESTful API
   version: 0.0.1
 servers:
-  - description: Production (temp. URL)
-    url: https://tgpm-backend-py-flask.azurewebsites.net
+  - description: Production
+    url: 'https://api.tgpm.world'
 tags:
-- description: Historical Political Events APIs
-  name: Events
+  - description: Historical Political Events APIs
+    name: Events
 paths:
   /v1/events:
     get:
