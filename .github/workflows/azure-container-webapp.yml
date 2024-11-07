@@ -30,6 +30,7 @@ env:
   AZURE_WEBAPP_NAME: tgpm-backend-py-flask  # set this to the name of your Azure Web App
 
 on:
+  pull_request:
   push:
     branches: [ "main" ]
   workflow_dispatch:
