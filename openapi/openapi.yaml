@@ -3,8 +3,8 @@ info:
   title: TempoGeoPolitical Map RESTful API
   version: 0.0.1
 servers:
-  - url: 'https://template.com'
-    description: Localhost
+  - url: 'https://tgpm.world'
+    description: Production
 security: [ ]
 tags:
   - name: Events
@@ -82,7 +82,7 @@ components:
     WikidataId:
       type: string
       description: 'Record ID of a data item in https://www.wikidata.org.'
-      example: Q178810
+      example: 'http://www.wikidata.org/entity/Q178810'
     EventName:
       type: string
       description: Name of a historical political Event.
@@ -170,11 +170,16 @@ components:
         timeStateRelativeToNow:
           allOf:
             - $ref: '#/components/schemas/EventTimeStateRelativeToNow'
-            - example: ONGOING
+            - example: FUTURE
         startTime:
           allOf:
             - $ref: '#/components/schemas/DateTime'
             - example: 2011-03-15T00:00:00.000Z
+      required:
+        - type
+        - wikidataId
+        - name
+        - startTime
     EventResponseBody:
       type: object
       properties:
@@ -191,10 +196,6 @@ components:
     EventTimeStateRelativeToNow:
       type: string
       description: 'Indicates wherether event is in past, happens now or will occur in future.'
-      enum:
-        - PAST
-        - ONGOING
-        - FUTURE
     BasicErrorObject:
       type: object
       properties:

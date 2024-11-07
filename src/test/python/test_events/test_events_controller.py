@@ -3,7 +3,7 @@
 from __future__ import absolute_import
 import unittest
 
-from src.test.test_events import BaseTestCase
+from python.test_events import BaseTestCase
 
 
 class TestEventsController(BaseTestCase):

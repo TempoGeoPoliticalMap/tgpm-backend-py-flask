@@ -71,3 +71,4 @@ target/
 /.idea/tgpm-backend-py-flask.iml
 /.idea/vcs.xml
 /.idea/webResources.xml
+/.idea/swagger-settings.xml

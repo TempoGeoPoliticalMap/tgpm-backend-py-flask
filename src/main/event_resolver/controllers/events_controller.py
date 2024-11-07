@@ -16,4 +16,4 @@ def v1_events_get():  # noqa: E501
     """
     result = events_service.get_events()
 
-    return result
+    return [event.to_dict() for event in result]

@@ -3,14 +3,7 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from openapi_models.models.base_model import Model
-from openapi_models.models.event_time_state_relative_to_now import (
-    EventTimeStateRelativeToNow,
-)
 from openapi_models import util
-
-from openapi_models.models.event_time_state_relative_to_now import (
-    EventTimeStateRelativeToNow,
-)  # noqa: E501
 
 
 class Event(Model):
@@ -36,7 +29,7 @@ class Event(Model):
         :param name: The name of this Event.  # noqa: E501
         :type name: str
         :param time_state_relative_to_now: The time_state_relative_to_now of this Event.  # noqa: E501
-        :type time_state_relative_to_now: EventTimeStateRelativeToNow
+        :type time_state_relative_to_now: str
         :param start_time: The start_time of this Event.  # noqa: E501
         :type start_time: str
         """
@@ -44,7 +37,7 @@ class Event(Model):
             "type": str,
             "wikidata_id": str,
             "name": str,
-            "time_state_relative_to_now": EventTimeStateRelativeToNow,
+            "time_state_relative_to_now": str,
             "start_time": str,
         }
 
@@ -91,6 +84,10 @@ class Event(Model):
         :param type: The type of this Event.
         :type type: str
         """
+        if type is None:
+            raise ValueError(
+                "Invalid value for `type`, must not be `None`"
+            )  # noqa: E501
 
         self._type = type
 
@@ -114,6 +111,10 @@ class Event(Model):
         :param wikidata_id: The wikidata_id of this Event.
         :type wikidata_id: str
         """
+        if wikidata_id is None:
+            raise ValueError(
+                "Invalid value for `wikidata_id`, must not be `None`"
+            )  # noqa: E501
 
         self._wikidata_id = wikidata_id
 
@@ -137,28 +138,30 @@ class Event(Model):
         :param name: The name of this Event.
         :type name: str
         """
+        if name is None:
+            raise ValueError(
+                "Invalid value for `name`, must not be `None`"
+            )  # noqa: E501
 
         self._name = name
 
     @property
-    def time_state_relative_to_now(self) -> EventTimeStateRelativeToNow:
+    def time_state_relative_to_now(self) -> str:
         """Gets the time_state_relative_to_now of this Event.
 
 
         :return: The time_state_relative_to_now of this Event.
-        :rtype: EventTimeStateRelativeToNow
+        :rtype: str
         """
         return self._time_state_relative_to_now
 
     @time_state_relative_to_now.setter
-    def time_state_relative_to_now(
-            self, time_state_relative_to_now: EventTimeStateRelativeToNow
-    ):
+    def time_state_relative_to_now(self, time_state_relative_to_now: str):
         """Sets the time_state_relative_to_now of this Event.
 
 
         :param time_state_relative_to_now: The time_state_relative_to_now of this Event.
-        :type time_state_relative_to_now: EventTimeStateRelativeToNow
+        :type time_state_relative_to_now: str
         """
 
         self._time_state_relative_to_now = time_state_relative_to_now
@@ -181,5 +184,9 @@ class Event(Model):
         :param start_time: The start_time of this Event.
         :type start_time: str
         """
+        if start_time is None:
+            raise ValueError(
+                "Invalid value for `start_time`, must not be `None`"
+            )  # noqa: E501
 
         self._start_time = start_time

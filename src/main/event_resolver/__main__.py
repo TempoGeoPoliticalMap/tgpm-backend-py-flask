@@ -10,7 +10,7 @@ def main():
         "openapi.yaml",
         arguments={"title": "TempoGeoPoliticalMap RESTful API"},
         pythonic_params=True,
-        resolver=RelativeResolver('event_resolver.controllers.events_controller')
+        resolver=RelativeResolver("event_resolver.controllers.events_controller"),
     )
 
     uvicorn.run(app, port=8080)

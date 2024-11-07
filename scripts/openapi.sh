@@ -11,29 +11,21 @@ npx openapi-generator-cli generate -i openapi/openapi.yaml -g python-flask -o sr
 
 
 # clean up `src/@generated`
-#rm -rf src/@generated/.github/
-#rm -rf src/@generated/docs/
-#rm -rf src/@generated/openapi_models/api/
-#rm src/@generated/openapi_models/api_client.py
-#rm src/@generated/openapi_models/api_response.py
-#rm src/@generated/openapi_models/configuration.py
-#rm src/@generated/openapi_models/exceptions.py
-#rm src/@generated/openapi_models/py.typed
-#rm src/@generated/openapi_models/rest.py
-#rm -rf src/@generated/test/
-#rm src/@generated/.gitignore
-#rm src/@generated/.gitlab-ci.yml
-#rm src/@generated/.openapi-generator-ignore
-#rm src/@generated/.travis.yml
-#rm src/@generated/git_push.sh
-#rm src/@generated/pyproject.toml
-#rm src/@generated/README.md
-#rm src/@generated/requirements.txt
-#rm src/@generated/setup.cfg
-#rm src/@generated/setup.py
-#rm src/@generated/test-requirements.txt
-#rm src/@generated/tox.ini
-#truncate -s 0 src/@generated/openapi_models/__init__.py
+rm -rf src/@generated/openapi_models/controllers/
+rm -rf src/@generated/openapi_models/test/
+rm src/@generated/openapi_models/__main__.py
+rm src/@generated/.dockerignore
+rm src/@generated/.gitignore
+rm src/@generated/.openapi-generator-ignore
+rm src/@generated/.travis.yml
+rm src/@generated/Dockerfile
+rm src/@generated/git_push.sh
+rm src/@generated/README.md
+rm src/@generated/requirements.txt
+rm src/@generated/setup.py
+rm src/@generated/test-requirements.txt
+rm src/@generated/tox.ini
+
 
 # formatter
 black src/@generated/

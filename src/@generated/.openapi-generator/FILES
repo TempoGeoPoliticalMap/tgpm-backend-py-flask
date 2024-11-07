@@ -26,7 +26,6 @@ openapi_models/models/error429.py
 openapi_models/models/event.py
 openapi_models/models/event_list_response_body.py
 openapi_models/models/event_response_body.py
-openapi_models/models/event_time_state_relative_to_now.py
 openapi_models/models/location.py
 openapi_models/models/region.py
 openapi_models/openapi/openapi.yaml

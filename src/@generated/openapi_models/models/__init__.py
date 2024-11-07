@@ -13,8 +13,5 @@ from openapi_models.models.error429 import Error429
 from openapi_models.models.event import Event
 from openapi_models.models.event_list_response_body import EventListResponseBody
 from openapi_models.models.event_response_body import EventResponseBody
-from openapi_models.models.event_time_state_relative_to_now import (
-    EventTimeStateRelativeToNow,
-)
 from openapi_models.models.location import Location
 from openapi_models.models.region import Region
