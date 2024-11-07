@@ -4,7 +4,7 @@ info:
   version: 0.0.1
 servers:
   - description: Production
-    url: https://api.tgpm.world
+    url: 'https://api.tgpm.world'
 tags:
   - description: Historical Political Events APIs
     name: Events
@@ -13,15 +13,15 @@ paths:
     get:
       operationId: v1_events_get
       parameters:
-        - description: Default accept header
-          example: application/json
-          explode: false
-          in: header
-          name: Accept
-          required: false
-          schema:
-            type: string
-          style: simple
+      - description: Default accept header
+        example: application/json
+        explode: false
+        in: header
+        name: Accept
+        required: false
+        schema:
+          type: string
+        style: simple
       responses:
         "200":
           content:
@@ -71,10 +71,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/BasicErrorObject'
           description: Unsuccessful Operation
-      security: [ ]
+      security: []
       summary: List of Historical Political Events.
       tags:
-        - Events
+      - Events
       x-openapi-router-controller: openapi_server.controllers.events_controller
 components:
   parameters:
@@ -92,7 +92,7 @@ components:
     EventType:
       description: Type of an Event.
       enum:
-        - WARFARE_AND_ARMED_CONFLICTS
+      - WARFARE_AND_ARMED_CONFLICTS
       title: EventType
       type: string
     EventTypeList:
@@ -113,13 +113,13 @@ components:
     Region:
       description: World Region.
       enum:
-        - east_asia_and_pacific
-        - europe_and_central_asia
-        - latin_america_and_caribbean
-        - middle_east_and_north_africa
-        - north_america
-        - south_asia
-        - sub_saharan_africa
+      - east_asia_and_pacific
+      - europe_and_central_asia
+      - latin_america_and_caribbean
+      - middle_east_and_north_africa
+      - north_america
+      - south_asia
+      - sub_saharan_africa
       type: string
     RegionList:
       description: List of World Regions to filter Events.
@@ -141,8 +141,8 @@ components:
       properties:
         wikidataId:
           allOf:
-            - $ref: '#/components/schemas/WikidataId'
-            - example: Q858
+          - $ref: '#/components/schemas/WikidataId'
+          - example: Q858
           title: wikidataId
         name:
           example: Syria
@@ -161,8 +161,8 @@ components:
       properties:
         wikidataId:
           allOf:
-            - $ref: '#/components/schemas/WikidataId'
-            - example: Q858
+          - $ref: '#/components/schemas/WikidataId'
+          - example: Q858
           title: wikidataId
         name:
           example: Syria
@@ -198,12 +198,12 @@ components:
       properties:
         type:
           allOf:
-            - $ref: '#/components/schemas/EventType'
-            - example: WARFARE_AND_ARMED_CONFLICTS
+          - $ref: '#/components/schemas/EventType'
+          - example: WARFARE_AND_ARMED_CONFLICTS
           title: type
         wikidataId:
           allOf:
-            - $ref: '#/components/schemas/WikidataId'
+          - $ref: '#/components/schemas/WikidataId'
           title: wikidataId
         name:
           description: Name of a historical political Event.
@@ -212,47 +212,47 @@ components:
           type: string
         countries:
           allOf:
-            - $ref: '#/components/schemas/CountryList'
-            - example:
-                - wikidataId: Q858
-                  name: Syria
+          - $ref: '#/components/schemas/CountryList'
+          - example:
+            - wikidataId: Q858
+              name: Syria
           title: countries
         locations:
           allOf:
-            - $ref: '#/components/schemas/LocationList'
-            - example:
-                - wikidataId: Q858
-                  name: Syria
-                  coodrinate: 39.3112722,-102.2917972
+          - $ref: '#/components/schemas/LocationList'
+          - example:
+            - wikidataId: Q858
+              name: Syria
+              coodrinate: 39.3112722,-102.2917972
           title: locations
         timeStateRelativeToNow:
           allOf:
-            - description: Indicates wherether event is in past, happens now or will
-                occur in future.
-              enum:
-                - PAST
-                - ONGOING
-                - FUTURE
-              type: string
-            - example: ONGOING
+          - description: Indicates wherether event is in past, happens now or will
+              occur in future.
+            enum:
+            - PAST
+            - ONGOING
+            - FUTURE
+            type: string
+          - example: ONGOING
           title: timeStateRelativeToNow
         startTime:
           allOf:
-            - $ref: '#/components/schemas/DateTime'
-            - example: 2011-03-15T00:00:00.000Z
+          - $ref: '#/components/schemas/DateTime'
+          - example: 2011-03-15T00:00:00.000Z
           title: startTime
         endTime:
           allOf:
-            - $ref: '#/components/schemas/DateTime'
-            - { }
+          - $ref: '#/components/schemas/DateTime'
+          - {}
           title: endTime
       required:
-        - countries
-        - name
-        - startTime
-        - timeStateRelativeToNow
-        - type
-        - wikidataId
+      - countries
+      - name
+      - startTime
+      - timeStateRelativeToNow
+      - type
+      - wikidataId
       title: Event
       type: object
     EventResponseBody:
@@ -263,46 +263,46 @@ components:
     EventListResponseBody:
       example:
         data:
-          - wikidataId: ""
-            name: Syrian Civil War
-            locations: ""
-            startTime: ""
-            countries: ""
-            endTime: ""
-            type: ""
-            timeStateRelativeToNow: ""
-          - wikidataId: ""
-            name: Syrian Civil War
-            locations: ""
-            startTime: ""
-            countries: ""
-            endTime: ""
-            type: ""
-            timeStateRelativeToNow: ""
-          - wikidataId: ""
-            name: Syrian Civil War
-            locations: ""
-            startTime: ""
-            countries: ""
-            endTime: ""
-            type: ""
-            timeStateRelativeToNow: ""
-          - wikidataId: ""
-            name: Syrian Civil War
-            locations: ""
-            startTime: ""
-            countries: ""
-            endTime: ""
-            type: ""
-            timeStateRelativeToNow: ""
-          - wikidataId: ""
-            name: Syrian Civil War
-            locations: ""
-            startTime: ""
-            countries: ""
-            endTime: ""
-            type: ""
-            timeStateRelativeToNow: ""
+        - wikidataId: ""
+          name: Syrian Civil War
+          locations: ""
+          startTime: ""
+          countries: ""
+          endTime: ""
+          type: ""
+          timeStateRelativeToNow: ""
+        - wikidataId: ""
+          name: Syrian Civil War
+          locations: ""
+          startTime: ""
+          countries: ""
+          endTime: ""
+          type: ""
+          timeStateRelativeToNow: ""
+        - wikidataId: ""
+          name: Syrian Civil War
+          locations: ""
+          startTime: ""
+          countries: ""
+          endTime: ""
+          type: ""
+          timeStateRelativeToNow: ""
+        - wikidataId: ""
+          name: Syrian Civil War
+          locations: ""
+          startTime: ""
+          countries: ""
+          endTime: ""
+          type: ""
+          timeStateRelativeToNow: ""
+        - wikidataId: ""
+          name: Syrian Civil War
+          locations: ""
+          startTime: ""
+          countries: ""
+          endTime: ""
+          type: ""
+          timeStateRelativeToNow: ""
       properties:
         data:
           items:
@@ -335,41 +335,41 @@ components:
       type: object
     Error400:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error400_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error400_allOf'
       title: Error400
     Error401:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error401_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error401_allOf'
       title: Error401
     Error403:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error403_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error403_allOf'
       title: Error403
     Error404:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error404_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error404_allOf'
       title: Error404
     Error406:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error406_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error406_allOf'
       title: Error406
     Error409:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error409_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error409_allOf'
     Error422:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error422_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error422_allOf'
     Error429:
       allOf:
-        - $ref: '#/components/schemas/BasicErrorObject'
-        - $ref: '#/components/schemas/Error429_allOf'
+      - $ref: '#/components/schemas/BasicErrorObject'
+      - $ref: '#/components/schemas/Error429_allOf'
       title: Error429
     Error400_allOf:
       properties:
