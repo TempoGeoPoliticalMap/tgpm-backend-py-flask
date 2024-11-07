@@ -14,6 +14,9 @@ npx openapi-generator-cli generate -i openapi/openapi.yaml -g python-flask -o sr
 rm -rf src/@generated/openapi_models/controllers/
 rm -rf src/@generated/openapi_models/test/
 rm src/@generated/openapi_models/__main__.py
+rm src/@generated/openapi_models/encoder.py
+rm src/@generated/openapi_models/typing_utils.py
+rm src/@generated/openapi_models/util.py
 rm src/@generated/.dockerignore
 rm src/@generated/.gitignore
 rm src/@generated/.openapi-generator-ignore
