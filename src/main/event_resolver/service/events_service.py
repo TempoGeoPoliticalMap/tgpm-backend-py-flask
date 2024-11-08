@@ -2,7 +2,7 @@ from typing import List
 
 from event_resolver.mapper.event_mapper import event_dao_to_event
 
-from openapi_models.models import Event
+from models import Event
 from events_storage import get_event_dao_list
 
 

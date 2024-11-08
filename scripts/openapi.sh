@@ -3,34 +3,33 @@
 # THIS SCRIPT SHOULD RUN FROM THE ROOT FOLDER
 
 # remove old @generated folder
-rm -rf src/@generated
+rm -rf src/main/@generated
 
 # run open api generator
-#npx openapi-generator-cli generate -i openapi/openapi.yaml -g python -o src/@generated --additional-properties=packageName=openapi_models
-npx openapi-generator-cli generate -i openapi/openapi.yaml -g python-flask -o src/@generated --additional-properties=packageName=openapi_models
+npx openapi-generator-cli generate -i openapi/openapi.yaml -g python-flask -o src/main/@generated --additional-properties=packageName=openapi_models
 
+# replace updated openapi file with the original one
+cp openapi/openapi.yaml src/main/@generated/openapi_models/openapi/openapi.yaml
 
-# clean up `src/@generated`
-rm -rf src/@generated/openapi_models/controllers/
-rm -rf src/@generated/openapi_models/test/
-rm src/@generated/openapi_models/__main__.py
-rm src/@generated/openapi_models/encoder.py
-rm src/@generated/openapi_models/typing_utils.py
-rm src/@generated/openapi_models/util.py
-rm src/@generated/.dockerignore
-rm src/@generated/.gitignore
-rm src/@generated/.openapi-generator-ignore
-rm src/@generated/.travis.yml
-rm src/@generated/Dockerfile
-rm src/@generated/git_push.sh
-rm src/@generated/README.md
-rm src/@generated/requirements.txt
-rm src/@generated/setup.py
-rm src/@generated/test-requirements.txt
-rm src/@generated/tox.ini
+# clean up `src/main/@generated`
+rm -rf src/main/@generated/openapi_models/controllers/
+rm -rf src/main/@generated/openapi_models/test/
+rm src/main/@generated/openapi_models/__main__.py
+rm src/main/@generated/openapi_models/encoder.py
+rm src/main/@generated/.dockerignore
+rm src/main/@generated/.gitignore
+rm src/main/@generated/.openapi-generator-ignore
+rm src/main/@generated/.travis.yml
+rm src/main/@generated/Dockerfile
+rm src/main/@generated/git_push.sh
+rm src/main/@generated/README.md
+rm src/main/@generated/requirements.txt
+rm src/main/@generated/setup.py
+rm src/main/@generated/test-requirements.txt
+rm src/main/@generated/tox.ini
 
 
 # formatter
-black src/@generated/
+black src/main/@generated/
 
 

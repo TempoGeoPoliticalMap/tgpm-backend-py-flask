@@ -1,5 +1,5 @@
 from event_resolver.service import events_service
-from openapi_models.models.event_list_response_body import (
+from event_list_response_body import (
     EventListResponseBody,
 )  # noqa: E501
 

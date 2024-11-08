@@ -1,5 +1,5 @@
 from datetime import datetime
-from openapi_models.models import Event
+from models import Event
 from wikidata_class_name import get_wikidata_event_type_name
 
 now = datetime.now()
