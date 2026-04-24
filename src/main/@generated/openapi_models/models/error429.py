@@ -13,7 +13,7 @@ class Error429(Model):
     """
 
     def __init__(
-            self, id=None, code=None, detail=None, source=None, status=None, title=None
+        self, id=None, code=None, detail=None, source=None, status=None, title=None
     ):  # noqa: E501
         """Error429 - a model defined in OpenAPI
 

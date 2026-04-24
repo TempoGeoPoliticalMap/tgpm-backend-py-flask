@@ -3,7 +3,10 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from openapi_models.models.base_model import Model
+import re
 from openapi_models import util
+
+import re  # noqa: E501
 
 
 class Country(Model):
@@ -56,6 +59,10 @@ class Country(Model):
         :param wikidata_id: The wikidata_id of this Country.
         :type wikidata_id: str
         """
+        if wikidata_id is None:
+            raise ValueError(
+                "Invalid value for `wikidata_id`, must not be `None`"
+            )  # noqa: E501
 
         self._wikidata_id = wikidata_id
 
@@ -77,5 +84,21 @@ class Country(Model):
         :param name: The name of this Country.
         :type name: str
         """
+        if name is None:
+            raise ValueError(
+                "Invalid value for `name`, must not be `None`"
+            )  # noqa: E501
+        if name is not None and len(name) > 120:
+            raise ValueError(
+                "Invalid value for `name`, length must be less than or equal to `120`"
+            )  # noqa: E501
+        if name is not None and len(name) < 1:
+            raise ValueError(
+                "Invalid value for `name`, length must be greater than or equal to `1`"
+            )  # noqa: E501
+        if name is not None and not re.search(r"^.*\S.*$", name):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `name`, must be a follow pattern or equal to `/^.*\S.*$/`"
+            )  # noqa: E501
 
         self._name = name

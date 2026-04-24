@@ -15,13 +15,13 @@ class Region(Model):
     """
     allowed enum values
     """
-    EAST_ASIA_AND_PACIFIC = "east_asia_and_pacific"
-    EUROPE_AND_CENTRAL_ASIA = "europe_and_central_asia"
-    LATIN_AMERICA_AND_CARIBBEAN = "latin_america_and_caribbean"
-    MIDDLE_EAST_AND_NORTH_AFRICA = "middle_east_and_north_africa"
-    NORTH_AMERICA = "north_america"
-    SOUTH_ASIA = "south_asia"
-    SUB_SAHARAN_AFRICA = "sub_saharan_africa"
+    EAST_ASIA_AND_PACIFIC = "EAST_ASIA_AND_PACIFIC"
+    EUROPE_AND_CENTRAL_ASIA = "EUROPE_AND_CENTRAL_ASIA"
+    LATIN_AMERICA_AND_CARIBBEAN = "LATIN_AMERICA_AND_CARIBBEAN"
+    MIDDLE_EAST_AND_NORTH_AFRICA = "MIDDLE_EAST_AND_NORTH_AFRICA"
+    NORTH_AMERICA = "NORTH_AMERICA"
+    SOUTH_ASIA = "SOUTH_ASIA"
+    SUB_SAHARAN_AFRICA = "SUB_SAHARAN_AFRICA"
 
     def __init__(self):  # noqa: E501
         """Region - a model defined in OpenAPI"""

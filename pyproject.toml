@@ -1,18 +1,26 @@
-[tool.poetry]
-name = "tgpm-backend-py-flask"
-version = "0.1.0"
-description = ""
-authors = ["Valentin Grigoryevskpoy <v.grigoryevskiy@gmail.com>"]
-readme = "README.md"
+[tool.black]
+line-length = 120
+target-version = ["py313"]
+extend-exclude = "src/main/@generated/"
 
-[tool.poetry.dependencies]
-python = "^3.13"
-uvicorn = "^0.32.0"
-pydantic = "^2.9.2"
-sparqlwrapper = "^2.0.0"
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+exclude = ["src/main/@generated"]
 
+[tool.ruff.lint]
+# E/W: pycodestyle  F: pyflakes  I: isort  UP: pyupgrade
+select = ["E", "F", "I", "W", "UP"]
+ignore = ["E501"]
 
+[tool.ruff.lint.isort]
+known-first-party = ["event_resolver", "openapi_models"]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.mypy]
+python_version = "3.13"
+ignore_missing_imports = true
+exclude = ["src/main/@generated/"]
+
+[tool.pytest.ini_options]
+testpaths = ["src/test/python"]
+pythonpath = ["src/main", "src/main/@generated", "src/test"]

@@ -1956,7 +1956,7 @@ tgpm-backend-py-flask/
 │   │   │   ├── mapper/        # Converts SPARQL result dicts to model instances
 │   │   │   ├── persistence/
 │   │   │   │   ├── models/    # Static lookup tables (Q-codes, region→country maps)
-│   │   │   │   └── reposotiry/# SPARQL query functions (typo in dirname — do not rename)
+│   │   │   │   └── repository/# SPARQL query functions
 │   │   │   └── resolver.py    # VersionedResolver: routes operationIds to controllers
 │   │   └── __main__.py        # Application entry point
 │   └── test/

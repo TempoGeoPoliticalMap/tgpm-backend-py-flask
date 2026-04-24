@@ -29,15 +29,16 @@ class Model:
         result = {}
 
         for attr in self.openapi_types:
+            key = self.attribute_map.get(attr, attr)
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[attr] = list(
+                result[key] = list(
                     map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
                 )
             elif hasattr(value, "to_dict"):
-                result[attr] = value.to_dict()
+                result[key] = value.to_dict()
             elif isinstance(value, dict):
-                result[attr] = dict(
+                result[key] = dict(
                     map(
                         lambda item: (
                             (item[0], item[1].to_dict())
@@ -48,7 +49,7 @@ class Model:
                     )
                 )
             else:
-                result[attr] = value
+                result[key] = value
 
         return result
 
