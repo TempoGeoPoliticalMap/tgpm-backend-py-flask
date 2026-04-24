@@ -4,15 +4,27 @@ import unittest
 
 import connexion
 from connexion.middleware import MiddlewarePosition
+from SPARQLWrapper.SPARQLExceptions import EndPointInternalError, EndPointNotFound
 
 from event_resolver.middleware import StripEmptyArrayParams
+from event_resolver.persistence.repository.exceptions import (
+    UpstreamRateLimitError,
+    UpstreamUnavailableError,
+)
 from event_resolver.resolver import VersionedResolver
 
 _SPEC_DIR = os.path.abspath(
     os.path.join(
         os.path.dirname(__file__),
-        "..", "..", "..", "..",
-        "src", "main", "@generated", "openapi_models", "openapi",
+        "..",
+        "..",
+        "..",
+        "..",
+        "src",
+        "main",
+        "@generated",
+        "openapi_models",
+        "openapi",
     )
 )
 
@@ -24,6 +36,27 @@ def _make_connexion_app():
         specification_dir=_SPEC_DIR,
     )
     app.add_middleware(StripEmptyArrayParams, position=MiddlewarePosition.BEFORE_VALIDATION)
+
+    @app.app.errorhandler(EndPointInternalError)
+    @app.app.errorhandler(EndPointNotFound)
+    def handle_sparql_error(exc):
+        return {"detail": "Upstream data source unavailable"}, 502
+
+    @app.app.errorhandler(TimeoutError)
+    def handle_sparql_timeout(exc):
+        return {"detail": "Upstream data source timeout"}, 504
+
+    @app.app.errorhandler(UpstreamRateLimitError)
+    def handle_sparql_rate_limit(exc):
+        headers = {}
+        if exc.retry_after:
+            headers["Retry-After"] = exc.retry_after
+        return {"detail": "Upstream data source rate limited"}, 429, headers
+
+    @app.app.errorhandler(UpstreamUnavailableError)
+    def handle_sparql_unavailable(exc):
+        return {"detail": "Upstream data source unavailable"}, 502
+
     app.add_api(
         "openapi.yaml",
         pythonic_params=True,

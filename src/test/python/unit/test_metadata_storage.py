@@ -12,7 +12,6 @@ _EMPTY_LIST = {"results": {"bindings": []}}
 
 
 class TestBuildSearchFilter(unittest.TestCase):
-
     def test_empty_when_no_query(self):
         self.assertEqual(_build_search_filter(None), "")
         self.assertEqual(_build_search_filter(""), "")

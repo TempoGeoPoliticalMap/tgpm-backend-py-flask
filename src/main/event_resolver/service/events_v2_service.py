@@ -1,7 +1,9 @@
+import logging
 import math
 
-from event_resolver.mapper.event_v2_mapper import map_binding
+from event_resolver.mapper.event_v2_mapper import is_valid_binding, map_binding
 from event_resolver.persistence.repository.events_v2_storage import (
+    UpstreamTimeoutError,
     count_events_v2,
     get_event_dao_list_v2,
 )
@@ -11,6 +13,7 @@ from openapi_models.models.event_event_list_response_body import (
 from openapi_models.models.pagination import Pagination
 
 MAX_PAGE_SIZE = 100
+logger = logging.getLogger(__name__)
 
 
 def get_events_v2(
@@ -33,12 +36,24 @@ def get_events_v2(
         "timeslot_end": timeslot_end,
     }
 
-    total_items = count_events_v2(filters)
-    total_pages = math.ceil(total_items / page_size) if page_size > 0 else 0
-    has_next_page = page < total_pages
+    try:
+        total_items = count_events_v2(filters)
+        total_pages = math.ceil(total_items / page_size) if page_size > 0 else 0
+        has_next_page = page < total_pages
+        bindings = get_event_dao_list_v2(filters, page, page_size)
+    except UpstreamTimeoutError:
+        logger.warning(
+            "count_events_v2 timed out for page=%s page_size=%s; using pagination fallback",
+            page,
+            page_size,
+        )
+        fallback_bindings = get_event_dao_list_v2(filters, page, page_size + 1)
+        has_next_page = len(fallback_bindings) > page_size
+        bindings = fallback_bindings[:page_size]
+        total_items = (page - 1) * page_size + len(bindings) + (1 if has_next_page else 0)
+        total_pages = page + 1 if has_next_page else page
 
-    bindings = get_event_dao_list_v2(filters, page, page_size)
-    events = [map_binding(b) for b in bindings]
+    events = [map_binding(b) for b in bindings if is_valid_binding(b)]
 
     pagination = Pagination(
         page=page,

@@ -1,7 +1,7 @@
 # https://rdflib.github.io/sparqlwrapper/
 from datetime import datetime, timedelta
 
-from SPARQLWrapper import JSON, SPARQLWrapper
+from SPARQLWrapper import JSON, POST, SPARQLWrapper
 
 # TODO TGPM-11 To add support for dates to be provided in the API request
 date_format = "%Y-%m-%d"
@@ -69,6 +69,8 @@ def get_results(endpoint_url, query):
     # TODO adjust user agent; see https://w.wiki/CX6
     user_agent = "WDQS-example Python/{}.{}".format("test", "debug")
     sparql = SPARQLWrapper(endpoint_url, agent=user_agent)
+    sparql.setTimeout(60)  # 60 second timeout for SPARQL queries
+    sparql.setMethod(POST)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
     return sparql.query().convert()

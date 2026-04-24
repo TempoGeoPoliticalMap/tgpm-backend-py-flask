@@ -9,6 +9,10 @@ from SPARQLWrapper.SPARQLExceptions import EndPointInternalError, EndPointNotFou
 from connexion.middleware import MiddlewarePosition
 
 from event_resolver.middleware import StripEmptyArrayParams
+from event_resolver.persistence.repository.exceptions import (
+    UpstreamRateLimitError,
+    UpstreamUnavailableError,
+)
 from event_resolver.resolver import VersionedResolver
 
 root_path = Path(sys.path[0]).resolve()
@@ -28,6 +32,21 @@ def main():
     @app.app.errorhandler(EndPointInternalError)
     @app.app.errorhandler(EndPointNotFound)
     def handle_sparql_error(exc):
+        return {"detail": "Upstream data source unavailable"}, 502
+
+    @app.app.errorhandler(TimeoutError)
+    def handle_sparql_timeout(exc):
+        return {"detail": "Upstream data source timeout"}, 504
+
+    @app.app.errorhandler(UpstreamRateLimitError)
+    def handle_sparql_rate_limit(exc):
+        headers = {}
+        if exc.retry_after:
+            headers["Retry-After"] = exc.retry_after
+        return {"detail": "Upstream data source rate limited"}, 429, headers
+
+    @app.app.errorhandler(UpstreamUnavailableError)
+    def handle_sparql_unavailable(exc):
         return {"detail": "Upstream data source unavailable"}, 502
 
     app.add_api(

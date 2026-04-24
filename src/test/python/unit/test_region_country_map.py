@@ -17,7 +17,6 @@ ALL_REGIONS = [
 
 
 class TestRegionCountryMap(unittest.TestCase):
-
     def test_all_seven_regions_present(self):
         self.assertEqual(set(REGION_COUNTRY_QCODES.keys()), set(ALL_REGIONS))
 
@@ -37,7 +36,7 @@ class TestRegionCountryMap(unittest.TestCase):
 
     def test_multiple_regions_are_combined(self):
         codes = get_country_qcodes_for_regions(["NORTH_AMERICA", "SOUTH_ASIA"])
-        self.assertIn("Q30", codes)   # USA (NORTH_AMERICA)
+        self.assertIn("Q30", codes)  # USA (NORTH_AMERICA)
         self.assertIn("Q668", codes)  # India (SOUTH_ASIA)
 
     def test_no_duplicates_when_regions_overlap(self):
@@ -54,15 +53,14 @@ class TestRegionCountryMap(unittest.TestCase):
 
     def test_no_qcode_appears_in_multiple_regions(self):
         from collections import Counter
+
         all_pairs = []
         for region, codes in REGION_COUNTRY_QCODES.items():
             all_pairs.extend((code, region) for code in codes)
         counts = Counter(code for code, _ in all_pairs)
-        duplicates = {
-            code: [r for c, r in all_pairs if c == code]
-            for code, n in counts.items() if n > 1
-        }
+        duplicates = {code: [r for c, r in all_pairs if c == code] for code, n in counts.items() if n > 1}
         self.assertEqual(
-            duplicates, {},
+            duplicates,
+            {},
             f"Q-codes appear in multiple regions (cross-region contamination): {duplicates}",
         )

@@ -4,7 +4,6 @@ from python.test_events import BaseTestCase
 
 
 class TestMetadataController(BaseTestCase):
-
     def test_event_types_returns_200(self):
         response = self.client.get(
             "/v2/metadata/event-types",

@@ -5,7 +5,6 @@ from event_resolver.resolver import VersionedResolver
 
 
 class TestVersionedResolver(unittest.TestCase):
-
     def setUp(self):
         self.resolver = VersionedResolver()
 

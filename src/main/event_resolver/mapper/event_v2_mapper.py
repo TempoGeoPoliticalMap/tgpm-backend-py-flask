@@ -20,13 +20,13 @@ _QCODE_TO_API_TYPE: dict[str, str] = {
     "Q2635077": "SOURCE_OF_INTERNATIONAL_LAW",
     "Q1335818": "SUPRANATIONAL_UNION",
     "Q71266556": "WARFARE_AND_ARMED_CONFLICTS",
+    "Q198": "WARFARE_AND_ARMED_CONFLICTS",
+    "Q467011": "WARFARE_AND_ARMED_CONFLICTS",
 }
 
 # Reverse lookup: Q-code → region name
 _QCODE_TO_REGION: dict[str, str] = {
-    qcode: region
-    for region, qcodes in REGION_COUNTRY_QCODES.items()
-    for qcode in qcodes
+    qcode: region for region, qcodes in REGION_COUNTRY_QCODES.items() for qcode in qcodes
 }
 
 
@@ -34,17 +34,26 @@ def _extract_qcode(uri: str) -> str:
     return uri.replace(_WIKIDATA_ENTITY_PREFIX, "")
 
 
+def _is_date(s: str) -> bool:
+    try:
+        datetime.strptime(s, _DATE_FORMAT)
+        return True
+    except ValueError:
+        return False
+
+
+def is_valid_binding(binding: dict) -> bool:
+    start = binding.get("startTime", {}).get("value", "")
+    return _is_date(start)
+
+
 def _resolve_time_state(start_dt_str: str, end_dt_str: str | None) -> str:
     now = datetime.now(UTC)
-    start_dt = datetime.strptime(start_dt_str, _DATE_FORMAT).replace(
-        tzinfo=UTC
-    )
+    start_dt = datetime.strptime(start_dt_str, _DATE_FORMAT).replace(tzinfo=UTC)
     if start_dt > now:
         return "FUTURE"
     if end_dt_str is not None:
-        end_dt = datetime.strptime(end_dt_str, _DATE_FORMAT).replace(
-            tzinfo=UTC
-        )
+        end_dt = datetime.strptime(end_dt_str, _DATE_FORMAT).replace(tzinfo=UTC)
         if end_dt <= now:
             return "PAST"
     return "ONGOING"
@@ -62,16 +71,14 @@ def map_binding(binding: dict) -> EventEvent:
 
     start_dt_str = binding["startTime"]["value"]
     end_dt_str = binding.get("endTime", {}).get("value")
+    if end_dt_str is not None and not _is_date(end_dt_str):
+        end_dt_str = None
 
     time_state = _resolve_time_state(start_dt_str, end_dt_str)
 
     country_ids = binding.get("countryIds", {}).get("value", "").split("|")
     country_labels = binding.get("countryLabels", {}).get("value", "").split("|")
-    countries = [
-        Country(wikidata_id=i, name=n)
-        for i, n in zip(country_ids, country_labels)
-        if i
-    ]
+    countries = [Country(wikidata_id=i, name=n) for i, n in zip(country_ids, country_labels) if i]
 
     location_ids = binding.get("locationIds", {}).get("value", "").split("|")
     location_labels = binding.get("locationLabels", {}).get("value", "").split("|")
@@ -82,11 +89,7 @@ def map_binding(binding: dict) -> EventEvent:
         if i and c
     ]
 
-    region_set: list[str] = list(
-        dict.fromkeys(
-            _QCODE_TO_REGION[i] for i in country_ids if i and i in _QCODE_TO_REGION
-        )
-    )
+    region_set: list[str] = list(dict.fromkeys(_QCODE_TO_REGION[i] for i in country_ids if i and i in _QCODE_TO_REGION))
 
     return EventEvent(
         type=event_type,

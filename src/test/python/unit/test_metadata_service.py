@@ -5,7 +5,6 @@ from event_resolver.service import metadata_service
 
 
 class TestMetadataService(unittest.TestCase):
-
     def test_get_event_types_returns_ten_items(self):
         result = metadata_service.get_event_types()
         self.assertEqual(len(result), 10)
@@ -29,9 +28,15 @@ class TestMetadataService(unittest.TestCase):
 
     def test_event_type_codes_match_spec_enum(self):
         expected = {
-            "GEOPOLITICAL_GROUP", "INTERNATIONAL_ORGANISATION", "MILITARY_ALLIANCE",
-            "MULTINATIONAL_MILITARY_COALITION", "POLITICAL_CONFERENCE", "POLITICAL_CRISIS",
-            "POLITICAL_MURDER", "SOURCE_OF_INTERNATIONAL_LAW", "SUPRANATIONAL_UNION",
+            "GEOPOLITICAL_GROUP",
+            "INTERNATIONAL_ORGANISATION",
+            "MILITARY_ALLIANCE",
+            "MULTINATIONAL_MILITARY_COALITION",
+            "POLITICAL_CONFERENCE",
+            "POLITICAL_CRISIS",
+            "POLITICAL_MURDER",
+            "SOURCE_OF_INTERNATIONAL_LAW",
+            "SUPRANATIONAL_UNION",
             "WARFARE_AND_ARMED_CONFLICTS",
         }
         actual = {item["code"] for item in metadata_service.get_event_types()}
@@ -39,9 +44,13 @@ class TestMetadataService(unittest.TestCase):
 
     def test_region_codes_match_spec_enum(self):
         expected = {
-            "EAST_ASIA_AND_PACIFIC", "EUROPE_AND_CENTRAL_ASIA",
-            "LATIN_AMERICA_AND_CARIBBEAN", "MIDDLE_EAST_AND_NORTH_AFRICA",
-            "NORTH_AMERICA", "SOUTH_ASIA", "SUB_SAHARAN_AFRICA",
+            "EAST_ASIA_AND_PACIFIC",
+            "EUROPE_AND_CENTRAL_ASIA",
+            "LATIN_AMERICA_AND_CARIBBEAN",
+            "MIDDLE_EAST_AND_NORTH_AFRICA",
+            "NORTH_AMERICA",
+            "SOUTH_ASIA",
+            "SUB_SAHARAN_AFRICA",
         }
         actual = {item["code"] for item in metadata_service.get_regions()}
         self.assertEqual(actual, expected)

@@ -39,9 +39,7 @@ class VersionedResolver(Resolver):
                 try:
                     fn = getattr(module, operation_id)
                 except AttributeError:
-                    raise ValueError(
-                        f"Controller function '{operation_id}' not found in '{module_path}'"
-                    )
+                    raise ValueError(f"Controller function '{operation_id}' not found in '{module_path}'")
                 self._cache[operation_id] = fn
                 return fn
         raise ValueError(f"No controller registered for operation: '{operation_id}'")

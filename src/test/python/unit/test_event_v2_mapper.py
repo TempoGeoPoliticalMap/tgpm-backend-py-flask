@@ -2,37 +2,38 @@ import unittest
 
 from event_resolver.mapper import event_v2_mapper
 
+_BLANK_NODE = "http://www.wikidata.org/.well-known/genid/f9702a193120719c02b44e41e81717c0"
+
 FULL_BINDING = {
-    "item":           {"value": "http://www.wikidata.org/entity/Q178810"},
-    "itemLabel":      {"value": "Syrian Civil War"},
-    "itemType":       {"value": "http://www.wikidata.org/entity/Q71266556"},
-    "startTime":      {"value": "2011-03-15T00:00:00Z"},
-    "endTime":        {"value": "2025-01-01T00:00:00Z"},
-    "description":    {"value": "An ongoing civil war in Syria."},
-    "imageUrl":       {"value": "https://upload.wikimedia.org/example.jpg"},
-    "wikipediaUrl":   {"value": "https://en.wikipedia.org/wiki/Syrian_civil_war"},
-    "countryIds":     {"value": "Q858|Q796"},
-    "countryLabels":  {"value": "Syria|Iraq"},
-    "locationIds":    {"value": "Q858"},
+    "item": {"value": "http://www.wikidata.org/entity/Q178810"},
+    "itemLabel": {"value": "Syrian Civil War"},
+    "itemType": {"value": "http://www.wikidata.org/entity/Q71266556"},
+    "startTime": {"value": "2011-03-15T00:00:00Z"},
+    "endTime": {"value": "2025-01-01T00:00:00Z"},
+    "description": {"value": "An ongoing civil war in Syria."},
+    "imageUrl": {"value": "https://upload.wikimedia.org/example.jpg"},
+    "wikipediaUrl": {"value": "https://en.wikipedia.org/wiki/Syrian_civil_war"},
+    "countryIds": {"value": "Q858|Q796"},
+    "countryLabels": {"value": "Syria|Iraq"},
+    "locationIds": {"value": "Q858"},
     "locationLabels": {"value": "Syria"},
-    "coordStrs":      {"value": "33.51,36.29"},
+    "coordStrs": {"value": "33.51,36.29"},
 }
 
 MINIMAL_BINDING = {
-    "item":           {"value": "http://www.wikidata.org/entity/Q178810"},
-    "itemLabel":      {"value": "Syrian Civil War"},
-    "itemType":       {"value": "http://www.wikidata.org/entity/Q71266556"},
-    "startTime":      {"value": "2011-03-15T00:00:00Z"},
-    "countryIds":     {"value": ""},
-    "countryLabels":  {"value": ""},
-    "locationIds":    {"value": ""},
+    "item": {"value": "http://www.wikidata.org/entity/Q178810"},
+    "itemLabel": {"value": "Syrian Civil War"},
+    "itemType": {"value": "http://www.wikidata.org/entity/Q71266556"},
+    "startTime": {"value": "2011-03-15T00:00:00Z"},
+    "countryIds": {"value": ""},
+    "countryLabels": {"value": ""},
+    "locationIds": {"value": ""},
     "locationLabels": {"value": ""},
-    "coordStrs":      {"value": ""},
+    "coordStrs": {"value": ""},
 }
 
 
 class TestEventV2Mapper(unittest.TestCase):
-
     def test_required_fields_populated(self):
         event = event_v2_mapper.map_binding(FULL_BINDING)
         self.assertEqual(event.wikidata_id, "Q178810")
@@ -86,7 +87,7 @@ class TestEventV2Mapper(unittest.TestCase):
     def test_time_state_past(self):
         binding = dict(FULL_BINDING)
         binding["startTime"] = {"value": "2000-01-01T00:00:00Z"}
-        binding["endTime"]   = {"value": "2001-01-01T00:00:00Z"}
+        binding["endTime"] = {"value": "2001-01-01T00:00:00Z"}
         event = event_v2_mapper.map_binding(binding)
         self.assertEqual(event.time_state_relative_to_now, "PAST")
 
@@ -99,3 +100,39 @@ class TestEventV2Mapper(unittest.TestCase):
     def test_wikidata_url_format(self):
         event = event_v2_mapper.map_binding(MINIMAL_BINDING)
         self.assertTrue(event.wikidata_url.startswith("https://www.wikidata.org/wiki/Q"))
+
+    def test_blank_node_end_time_is_treated_as_none(self):
+        binding = dict(MINIMAL_BINDING)
+        binding["startTime"] = {"value": "2026-02-28T00:00:00Z"}
+        binding["endTime"] = {"value": _BLANK_NODE}
+        event = event_v2_mapper.map_binding(binding)
+        self.assertIsNone(event.end_date_time)
+
+    def test_blank_node_end_time_yields_ongoing_state(self):
+        binding = dict(MINIMAL_BINDING)
+        binding["startTime"] = {"value": "2026-02-28T00:00:00Z"}
+        binding["endTime"] = {"value": _BLANK_NODE}
+        event = event_v2_mapper.map_binding(binding)
+        self.assertEqual(event.time_state_relative_to_now, "ONGOING")
+
+
+class TestIsValidBinding(unittest.TestCase):
+    def test_valid_binding_with_end_time(self):
+        self.assertTrue(event_v2_mapper.is_valid_binding(FULL_BINDING))
+
+    def test_valid_binding_without_end_time(self):
+        self.assertTrue(event_v2_mapper.is_valid_binding(MINIMAL_BINDING))
+
+    def test_blank_node_start_time_is_invalid(self):
+        binding = dict(MINIMAL_BINDING)
+        binding["startTime"] = {"value": _BLANK_NODE}
+        self.assertFalse(event_v2_mapper.is_valid_binding(binding))
+
+    def test_blank_node_end_time_is_valid(self):
+        binding = dict(MINIMAL_BINDING)
+        binding["endTime"] = {"value": _BLANK_NODE}
+        self.assertTrue(event_v2_mapper.is_valid_binding(binding))
+
+    def test_missing_start_time_is_invalid(self):
+        binding = {k: v for k, v in MINIMAL_BINDING.items() if k != "startTime"}
+        self.assertFalse(event_v2_mapper.is_valid_binding(binding))

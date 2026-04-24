@@ -1,9 +1,12 @@
 import logging
 import re
+import socket
 from datetime import UTC, datetime, timedelta
+from http.client import RemoteDisconnected
 from typing import cast
+from urllib.error import HTTPError, URLError
 
-from SPARQLWrapper import JSON, SPARQLWrapper
+from SPARQLWrapper import JSON, POST, SPARQLWrapper
 
 from event_resolver.persistence.models.region_country_map import (
     get_country_qcodes_for_regions,
@@ -11,17 +14,20 @@ from event_resolver.persistence.models.region_country_map import (
 from event_resolver.persistence.models.wikidata_class_enum import (
     WikidataClassEnum,
 )
+from event_resolver.persistence.repository.exceptions import (
+    UpstreamRateLimitError,
+    UpstreamTimeoutError,
+    UpstreamUnavailableError,
+)
 
 logger = logging.getLogger(__name__)
 
 SPARQL_ENDPOINT = "https://query.wikidata.org/sparql"
-SPARQL_USER_AGENT = (
-    "TGPM-Backend/1.0 (https://github.com/TempoGeoPoliticalMap; contact@tgpm.org)"
-)
+SPARQL_USER_AGENT = "TGPM-Backend/1.0 (https://github.com/TempoGeoPoliticalMap; contact@tgpm.org)"
 SPARQL_TIMEOUT_SECONDS = 30
 
 _MAIN_QUERY_TEMPLATE = """
-SELECT DISTINCT
+SELECT
   ?item ?itemLabel ?itemType
   ?startTime ?endTime
   ?description
@@ -33,18 +39,33 @@ SELECT DISTINCT
   (GROUP_CONCAT(DISTINCT ?locationLabel;separator="|") AS ?locationLabels)
   (GROUP_CONCAT(DISTINCT ?coordStr;     separator="|") AS ?coordStrs)
 WHERE {{
-  SERVICE wikibase:label {{
-    bd:serviceParam wikibase:language "en".
+  {{
+    SELECT ?item (MIN(?rootType) AS ?itemType) ?startTime ?endTime WHERE {{
+      {type_filter}
+      ?item wdt:P31 ?rootType.
+
+      OPTIONAL {{ ?item wdt:P580 ?startTimeIndicator. }}
+      OPTIONAL {{ ?item wdt:P585 ?pointInTime. }}
+      BIND(IF(BOUND(?startTimeIndicator), ?startTimeIndicator, ?pointInTime) AS ?startTime)
+
+      OPTIONAL {{ ?item wdt:P582 ?endTime. }}
+
+      {location_filter}
+
+      FILTER(?startTime <= "{timeslot_end}"^^xsd:dateTime)
+      FILTER(!BOUND(?endTime) || !isLiteral(?endTime) || ?endTime >= "{timeslot_start}"^^xsd:dateTime)
+    }}
+    GROUP BY ?item ?startTime ?endTime
+    ORDER BY DESC(?startTime)
+    LIMIT {page_size}
+    OFFSET {offset}
   }}
 
-  {type_filter}
-  ?item wdt:P31 ?itemType.
-
-  OPTIONAL {{ ?item wdt:P580 ?startTimeIndicator. }}
-  OPTIONAL {{ ?item wdt:P585 ?pointInTime. }}
-  BIND(IF(BOUND(?startTimeIndicator), ?startTimeIndicator, ?pointInTime) AS ?startTime)
-
-  OPTIONAL {{ ?item wdt:P582 ?endTime. }}
+  OPTIONAL {{
+    ?item rdfs:label ?itemLabelEn.
+    FILTER(LANG(?itemLabelEn) = "en")
+  }}
+  BIND(COALESCE(?itemLabelEn, REPLACE(STR(?item), "http://www.wikidata.org/entity/", "")) AS ?itemLabel)
 
   OPTIONAL {{
     ?item schema:description ?description.
@@ -81,33 +102,34 @@ WHERE {{
     }}
   }}
 
-  {location_filter}
-
-  FILTER(?startTime >= "{timeslot_start}"^^xsd:dateTime)
-  FILTER(?startTime <= "{timeslot_end}"^^xsd:dateTime)
 }}
 GROUP BY ?item ?itemLabel ?itemType ?startTime ?endTime ?description ?imageUrl ?wikipediaUrl
 ORDER BY DESC(?startTime)
-LIMIT {page_size}
-OFFSET {offset}
 """
 
 _COUNT_QUERY_TEMPLATE = """
 SELECT (COUNT(DISTINCT ?item) AS ?total)
 WHERE {{
   {type_filter}
-  ?item wdt:P31 ?itemType.
+  ?item wdt:P31 ?rootType.
 
   OPTIONAL {{ ?item wdt:P580 ?startTimeIndicator. }}
   OPTIONAL {{ ?item wdt:P585 ?pointInTime. }}
   BIND(IF(BOUND(?startTimeIndicator), ?startTimeIndicator, ?pointInTime) AS ?startTime)
 
+  OPTIONAL {{ ?item wdt:P582 ?endTime. }}
+
   {location_filter}
 
-  FILTER(?startTime >= "{timeslot_start}"^^xsd:dateTime)
   FILTER(?startTime <= "{timeslot_end}"^^xsd:dateTime)
+  FILTER(!BOUND(?endTime) || !isLiteral(?endTime) || ?endTime >= "{timeslot_start}"^^xsd:dateTime)
 }}
 """
+
+
+def _type_filter(root_qcodes: list[str]) -> str:
+    values = " ".join(f"wd:{q}" for q in root_qcodes)
+    return f"VALUES ?rootType {{ {values} }}"
 
 
 def _default_date_range() -> tuple[str, str]:
@@ -155,17 +177,56 @@ def _build_location_filter(filters: dict) -> str:
 
 
 def _sparql_query(query: str) -> dict:
+    logger.debug("Executing SPARQL query: %s", query)
     sparql = SPARQLWrapper(SPARQL_ENDPOINT, agent=SPARQL_USER_AGENT)
     sparql.setTimeout(SPARQL_TIMEOUT_SECONDS)
+    sparql.setMethod(POST)
     sparql.setQuery(query)
     sparql.setReturnFormat(JSON)
-    logger.debug("Executing SPARQL query: %s", query)
     try:
         results = sparql.query().convert()
+        return cast(dict, results)
     except Exception as exc:
+        if _is_rate_limited_error(exc):
+            logger.error("SPARQL query rate limited: %s", exc)
+            raise UpstreamRateLimitError(
+                "Upstream data source rate limited",
+                retry_after=_extract_retry_after(exc),
+            ) from exc
+        if _is_timeout_error(exc):
+            logger.error("SPARQL query timed out: %s", exc)
+            raise UpstreamTimeoutError(str(exc)) from exc
+        if _is_retryable_connection_error(exc):
+            logger.error("SPARQL query connection error: %s", exc)
+            raise UpstreamUnavailableError("Upstream data source unavailable") from exc
         logger.error("SPARQL query failed: %s", exc)
         raise
-    return cast(dict, results)
+
+
+def _is_timeout_error(exc: Exception) -> bool:
+    if isinstance(exc, (TimeoutError, socket.timeout)):
+        return True
+    if isinstance(exc, URLError):
+        return isinstance(exc.reason, (TimeoutError, socket.timeout))
+    return "timed out" in str(exc).lower()
+
+
+def _is_rate_limited_error(exc: Exception) -> bool:
+    return isinstance(exc, HTTPError) and exc.code == 429
+
+
+def _extract_retry_after(exc: Exception) -> str | None:
+    if isinstance(exc, HTTPError):
+        return exc.headers.get("Retry-After")
+    return None
+
+
+def _is_retryable_connection_error(exc: Exception) -> bool:
+    if isinstance(exc, RemoteDisconnected):
+        return True
+    if isinstance(exc, URLError):
+        return isinstance(exc.reason, RemoteDisconnected)
+    return "remote end closed connection without response" in str(exc).lower()
 
 
 def count_events_v2(filters: dict) -> int:
@@ -175,11 +236,11 @@ def count_events_v2(filters: dict) -> int:
     if filters.get("timeslot_end"):
         timeslot_end = filters["timeslot_end"]
 
-    type_filter = WikidataClassEnum.to_sparql_values_block(filters.get("types"))
+    root_qcodes = WikidataClassEnum.root_qcodes_for(filters.get("types"))
     location_filter = _build_location_filter(filters)
 
     query = _COUNT_QUERY_TEMPLATE.format(
-        type_filter=type_filter,
+        type_filter=_type_filter(root_qcodes),
         location_filter=location_filter,
         timeslot_start=timeslot_start,
         timeslot_end=timeslot_end,
@@ -199,12 +260,12 @@ def get_event_dao_list_v2(filters: dict, page: int, page_size: int) -> list[dict
     if filters.get("timeslot_end"):
         timeslot_end = filters["timeslot_end"]
 
-    type_filter = WikidataClassEnum.to_sparql_values_block(filters.get("types"))
+    root_qcodes = WikidataClassEnum.root_qcodes_for(filters.get("types"))
     location_filter = _build_location_filter(filters)
     offset = (page - 1) * page_size
 
     query = _MAIN_QUERY_TEMPLATE.format(
-        type_filter=type_filter,
+        type_filter=_type_filter(root_qcodes),
         location_filter=location_filter,
         timeslot_start=timeslot_start,
         timeslot_end=timeslot_end,
