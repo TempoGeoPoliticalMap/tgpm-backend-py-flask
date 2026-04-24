@@ -14,9 +14,10 @@ SPARQL_TIMEOUT_SECONDS = 30
 
 _COUNTRY_CODES_QUERY = """
 SELECT DISTINCT ?iso3 ?countryLabel WHERE {{
-  SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
   ?country wdt:P31 wd:Q6256.
   ?country wdt:P298 ?iso3.
+  ?country rdfs:label ?countryLabel.
+  FILTER(LANG(?countryLabel) = "en")
   {search_filter}
 }}
 ORDER BY ASC(?iso3)
@@ -26,9 +27,10 @@ OFFSET {offset}
 
 _COUNTRY_CODES_COUNT_QUERY = """
 SELECT (COUNT(DISTINCT ?country) AS ?total) WHERE {{
-  SERVICE wikibase:label {{ bd:serviceParam wikibase:language "en". }}
   ?country wdt:P31 wd:Q6256.
   ?country wdt:P298 ?iso3.
+  ?country rdfs:label ?countryLabel.
+  FILTER(LANG(?countryLabel) = "en")
   {search_filter}
 }}
 """

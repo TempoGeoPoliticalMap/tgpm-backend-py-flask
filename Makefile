@@ -37,4 +37,4 @@ openapi:
 
 # Run the development server.
 run:
-	PYTHONPATH=src/main:src/main/@generated pipenv run python -m main
+	PYTHONPATH=src:src/main:src/main/@generated pipenv run python -m main

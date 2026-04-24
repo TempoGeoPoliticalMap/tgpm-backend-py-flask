@@ -94,6 +94,33 @@ class TestEventsV2Controller(BaseTestCase):
             )
         self.assert200(response)
 
+    def test_v2_events_empty_types_param_treated_as_omitted(self):
+        """?types= (key present, empty value) must not cause a 400."""
+        with (
+            patch("event_resolver.service.events_v2_service.count_events_v2", return_value=0),
+            patch("event_resolver.service.events_v2_service.get_event_dao_list_v2", return_value=[]),
+        ):
+            response = self.client.get("/v2/events?types=")
+        self.assert200(response)
+
+    def test_v2_events_empty_regions_param_treated_as_omitted(self):
+        """?regions= (key present, empty value) must not cause a 400."""
+        with (
+            patch("event_resolver.service.events_v2_service.count_events_v2", return_value=0),
+            patch("event_resolver.service.events_v2_service.get_event_dao_list_v2", return_value=[]),
+        ):
+            response = self.client.get("/v2/events?regions=")
+        self.assert200(response)
+
+    def test_v2_events_empty_types_and_regions_treated_as_omitted(self):
+        """?types=&regions= together must not cause a 400."""
+        with (
+            patch("event_resolver.service.events_v2_service.count_events_v2", return_value=0),
+            patch("event_resolver.service.events_v2_service.get_event_dao_list_v2", return_value=[]),
+        ):
+            response = self.client.get("/v2/events?types=&regions=")
+        self.assert200(response)
+
     def test_v1_events_still_works(self):
         """Backward compatibility guard: v1 must not be broken."""
         with patch(

@@ -3,7 +3,9 @@ import os
 import unittest
 
 import connexion
+from connexion.middleware import MiddlewarePosition
 
+from event_resolver.middleware import StripEmptyArrayParams
 from event_resolver.resolver import VersionedResolver
 
 _SPEC_DIR = os.path.abspath(
@@ -21,6 +23,7 @@ def _make_connexion_app():
         __name__,
         specification_dir=_SPEC_DIR,
     )
+    app.add_middleware(StripEmptyArrayParams, position=MiddlewarePosition.BEFORE_VALIDATION)
     app.add_api(
         "openapi.yaml",
         pythonic_params=True,

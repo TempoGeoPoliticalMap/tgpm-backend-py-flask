@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
 import sys
 from pathlib import Path
+
 import connexion
 import uvicorn
 from SPARQLWrapper.SPARQLExceptions import EndPointInternalError, EndPointNotFound
 
+from connexion.middleware import MiddlewarePosition
+
+from event_resolver.middleware import StripEmptyArrayParams
 from event_resolver.resolver import VersionedResolver
 
 root_path = Path(sys.path[0]).resolve()
 
 
 def main():
-    app = connexion.AsyncApp(
+    app = connexion.FlaskApp(
         __name__, specification_dir="./@generated/openapi_models/openapi"
     )
+
+    app.add_middleware(StripEmptyArrayParams, position=MiddlewarePosition.BEFORE_VALIDATION)
 
     @app.app.route("/health")
     def health():
