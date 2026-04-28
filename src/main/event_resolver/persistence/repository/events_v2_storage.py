@@ -1,7 +1,7 @@
 import logging
 import re
 import socket
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from http.client import RemoteDisconnected
 from typing import cast
 from urllib.error import HTTPError, URLError
@@ -135,10 +135,9 @@ def _type_filter(root_qcodes: list[str]) -> str:
 def _default_date_range() -> tuple[str, str]:
     now = datetime.now(UTC)
     fmt = "%Y-%m-%dT%H:%M:%SZ"
-    return (
-        (now - timedelta(days=30)).strftime(fmt),
-        (now + timedelta(days=30)).strftime(fmt),
-    )
+    start_of_day = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    end_of_day = now.replace(hour=23, minute=59, second=59, microsecond=0)
+    return start_of_day.strftime(fmt), end_of_day.strftime(fmt)
 
 
 def _build_location_filter(filters: dict) -> str:

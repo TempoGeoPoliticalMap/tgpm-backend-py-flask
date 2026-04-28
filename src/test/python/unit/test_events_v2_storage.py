@@ -1,3 +1,4 @@
+from datetime import UTC, datetime
 from unittest.mock import patch
 
 from event_resolver.persistence.repository.events_v2_storage import (
@@ -42,6 +43,17 @@ class TestEventsV2Storage:
         assert "MIN(?rootType)" in query
         assert "LIMIT 10" in query
         assert "OFFSET 0" in query
+
+    @patch("event_resolver.persistence.repository.events_v2_storage._sparql_query")
+    def test_default_timeslot_covers_today(self, mock_sparql):
+        mock_sparql.return_value = {"results": {"bindings": []}}
+        today = datetime.now(UTC).strftime("%Y-%m-%d")
+
+        get_event_dao_list_v2(filters={}, page=1, page_size=10)
+
+        query = mock_sparql.call_args[0][0]
+        assert f"{today}T00:00:00Z" in query
+        assert f"{today}T23:59:59Z" in query
 
     @patch("event_resolver.persistence.repository.events_v2_storage._sparql_query")
     def test_main_query_offset_advances_with_page(self, mock_sparql):
