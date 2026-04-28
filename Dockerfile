@@ -9,7 +9,7 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY src /usr/src/app
 
-ENV PYTHONPATH=/usr/src/app/main
+ENV PYTHONPATH=/usr/src/app/main:/usr/src/app/main/@generated
 
 EXPOSE 8080
 
