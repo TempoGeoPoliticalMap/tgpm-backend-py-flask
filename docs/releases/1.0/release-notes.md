@@ -28,7 +28,7 @@ Paginated, filterable list of historical political events backed by Wikidata SPA
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `page` | integer | 1 | Page number (1-based) |
-| `pageSize` | integer | 100 | Items per page (max 100) |
+| `pageSize` | integer | 25 | Items per page (max 100) |
 | `types` | enum[] | all | Filter by event type (see `/v2/metadata/event-types` for valid values) |
 | `regions` | enum[] | all | Filter by world region (see `/v2/metadata/regions` for valid values) |
 | `countries` | string[] | all | Filter by ISO 3166-1 alpha-3 country code (e.g. `GBR`, `FRA`) |
@@ -59,7 +59,7 @@ When `regions` and `countries` are both supplied, events matching either are ret
   ],
   "pagination": {
     "page": 1,
-    "pageSize": 100,
+    "pageSize": 25,
     "totalItems": 342,
     "totalPages": 4,
     "hasNextPage": true
@@ -166,6 +166,6 @@ Full audit in [`dependency-updates.md`](dependency-updates.md).
 ## Known constraints
 
 - Default time window (when no `timeslot_start`/`timeslot_end` is provided) is **today only** (UTC midnight to 23:59:59).
-- Maximum `pageSize` is **100** on all paginated endpoints.
+- Default `pageSize` is **25** on all paginated endpoints; maximum is **100**.
 - Country filter uses ISO 3166-1 alpha-3 codes; values not matching `[A-Z]{3}` are rejected with HTTP 400.
 - Wikidata SPARQL latency may vary. Requests time out after 30 seconds.

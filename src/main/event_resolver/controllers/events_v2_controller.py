@@ -3,7 +3,7 @@ from event_resolver.service import events_v2_service
 
 def v2_events_get(
     page: int = 1,
-    page_size: int = 100,
+    page_size: int = 25,
     types: list[str] | None = None,
     regions: list[str] | None = None,
     countries: list[str] | None = None,

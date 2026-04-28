@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 def get_events_v2(
     page: int = 1,
-    page_size: int = 100,
+    page_size: int = 25,
     types: list[str] | None = None,
     regions: list[str] | None = None,
     countries: list[str] | None = None,

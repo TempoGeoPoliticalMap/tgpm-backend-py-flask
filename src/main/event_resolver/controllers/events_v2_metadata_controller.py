@@ -11,7 +11,7 @@ def v2_metadata_regions_get():
 
 def v2_metadata_country_codes_get(
     page: int = 1,
-    page_size: int = 100,
+    page_size: int = 25,
     q: str | None = None,
 ):
     return metadata_service.get_country_codes(page=page, page_size=page_size, q=q)
