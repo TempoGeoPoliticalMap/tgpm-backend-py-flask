@@ -33,7 +33,7 @@ make setup
 make run
 ```
 
-The server starts on `http://localhost:8080`. Swagger UI is at `http://localhost:8080/ui`.
+The server starts on `http://localhost:8080`. Swagger UI is at `http://localhost:8080/ui` (also accessible at `/swagger`). The OpenAPI spec is available at `http://localhost:8080/openapi.json`.
 
 ---
 

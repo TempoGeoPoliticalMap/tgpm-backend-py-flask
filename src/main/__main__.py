@@ -5,6 +5,7 @@ from pathlib import Path
 
 import connexion
 import uvicorn
+from flask import redirect
 from SPARQLWrapper.SPARQLExceptions import EndPointInternalError, EndPointNotFound
 
 from connexion.middleware import MiddlewarePosition
@@ -29,6 +30,11 @@ def main():
     @app.app.route("/health")
     def health():
         return {"status": "ok"}, 200
+
+    @app.app.route("/swagger")
+    @app.app.route("/swagger/")
+    def swagger_redirect():
+        return redirect("/ui")
 
     @app.app.errorhandler(EndPointInternalError)
     @app.app.errorhandler(EndPointNotFound)
