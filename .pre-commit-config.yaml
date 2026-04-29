@@ -1,0 +1,58 @@
+repos:
+  # -----------------------------------------------------------------
+  # 1. Secret scanning — runs first to block secrets before anything else
+  # -----------------------------------------------------------------
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.21.2
+    hooks:
+      - id: gitleaks
+
+  # -----------------------------------------------------------------
+  # 2. Linting and formatting (ruff covers pycodestyle, pyflakes, isort)
+  #    Only applied to hand-written code — @generated is excluded.
+  # -----------------------------------------------------------------
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.1
+    hooks:
+      - id: ruff
+        args: [--fix]
+        exclude: ^src/main/@generated/
+      - id: ruff-format
+        exclude: ^src/main/@generated/
+
+  # -----------------------------------------------------------------
+  # 3. Black formatter (authoritative code style)
+  # -----------------------------------------------------------------
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        exclude: ^src/main/@generated/
+
+  # -----------------------------------------------------------------
+  # 4. Static type checking (excludes auto-generated code)
+  # -----------------------------------------------------------------
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.14.1
+    hooks:
+      - id: mypy
+        args: [src/main/event_resolver/, --ignore-missing-imports, --no-warn-unused-ignores]
+        pass_filenames: false
+        additional_dependencies:
+          - types-requests
+          - types-PyYAML
+          - types-python-dateutil
+
+  # -----------------------------------------------------------------
+  # 5. Keep requirements.txt in sync with Pipfile.lock
+  #    requirements.txt is consumed by external tools (Dependabot, Docker)
+  #    but should never be edited by hand.
+  # -----------------------------------------------------------------
+  - repo: local
+    hooks:
+      - id: pipenv-requirements
+        name: Export requirements.txt from Pipfile.lock
+        language: system
+        entry: bash -c 'pipenv requirements > requirements.txt && git add requirements.txt'
+        pass_filenames: false
+        always_run: true

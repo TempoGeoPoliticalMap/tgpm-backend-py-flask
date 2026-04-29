@@ -1,0 +1,35 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+connexion = {extras = ["flask"], version = ">=3.3.0"}
+Flask = ">=3.1.3"
+uvicorn = ">=0.46.0"
+pydantic = ">=2.13.3"
+SPARQLWrapper = ">=2.0.0"
+requests = ">=2.33.1"
+python-dateutil = ">=2.9.0"
+PyYAML = ">=6.0.3"
+rdflib = ">=7.6.0"
+starlette = ">=1.0.0"
+jsonschema = ">=4.26.0"
+httpx = ">=0.28.1"
+swagger-ui-bundle = ">=1.1.0"
+Werkzeug = ">=3.1.8"
+Jinja2 = ">=3.1.6"
+
+[dev-packages]
+black = "*"
+ruff = "*"
+mypy = "*"
+pre-commit = "*"
+pytest = "*"
+anyio = {extras = ["trio"], version = "*"}
+types-requests = "*"
+types-PyYAML = "*"
+types-python-dateutil = "*"
+
+[requires]
+python_version = "3.13"

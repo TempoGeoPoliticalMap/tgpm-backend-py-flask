@@ -1,0 +1,54 @@
+name: Version check
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  version-check:
+    name: Verify version was bumped
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compare version against main
+        run: |
+          PR_VERSION=$(python3 -c "
+          import tomllib
+          with open('pyproject.toml', 'rb') as f:
+              print(tomllib.load(f)['project']['version'])
+          ")
+
+          git fetch origin main --depth=1
+          MAIN_VERSION=$(git show origin/main:pyproject.toml 2>/dev/null | python3 -c "
+          import sys, tomllib
+          data = sys.stdin.buffer.read()
+          if not data:
+              print('')
+              raise SystemExit(0)
+          project = tomllib.loads(data.decode()).get('project', {})
+          print(project.get('version', ''))
+          " 2>/dev/null || echo "")
+
+          python3 - <<EOF
+          def parse(v):
+              return tuple(int(x) for x in v.split('.'))
+
+          pr_str   = "${PR_VERSION}"
+          main_str = "${MAIN_VERSION}"
+
+          if not main_str:
+              print(f"No version found on main — skipping check (backwards compatibility).")
+              raise SystemExit(0)
+
+          pr   = parse(pr_str)
+          main = parse(main_str)
+
+          if pr <= main:
+              print(f"::error::Version must be bumped before merging to main. main={'.'.join(map(str, main))}, PR={'.'.join(map(str, pr))}")
+              exit(1)
+
+          print(f"Version bumped: {'.'.join(map(str, main))} -> {'.'.join(map(str, pr))}")
+          EOF

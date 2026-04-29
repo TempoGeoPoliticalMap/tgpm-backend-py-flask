@@ -13,12 +13,12 @@ class Event(Model):
     """
 
     def __init__(
-            self,
-            type=None,
-            wikidata_id=None,
-            name=None,
-            time_state_relative_to_now=None,
-            start_time=None,
+        self,
+        type=None,
+        wikidata_id=None,
+        name=None,
+        time_state_relative_to_now=None,
+        start_time=None,
     ):  # noqa: E501
         """Event - a model defined in OpenAPI
 

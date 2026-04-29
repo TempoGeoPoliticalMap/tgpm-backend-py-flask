@@ -3,7 +3,10 @@ from datetime import date, datetime  # noqa: F401
 from typing import List, Dict  # noqa: F401
 
 from openapi_models.models.base_model import Model
+import re
 from openapi_models import util
+
+import re  # noqa: E501
 
 
 class Location(Model):
@@ -12,27 +15,27 @@ class Location(Model):
     Do not edit the class manually.
     """
 
-    def __init__(self, wikidata_id=None, name=None, coodrinate=None):  # noqa: E501
+    def __init__(self, wikidata_id=None, name=None, coordinate=None):  # noqa: E501
         """Location - a model defined in OpenAPI
 
         :param wikidata_id: The wikidata_id of this Location.  # noqa: E501
         :type wikidata_id: str
         :param name: The name of this Location.  # noqa: E501
         :type name: str
-        :param coodrinate: The coodrinate of this Location.  # noqa: E501
-        :type coodrinate: str
+        :param coordinate: The coordinate of this Location.  # noqa: E501
+        :type coordinate: str
         """
-        self.openapi_types = {"wikidata_id": str, "name": str, "coodrinate": str}
+        self.openapi_types = {"wikidata_id": str, "name": str, "coordinate": str}
 
         self.attribute_map = {
             "wikidata_id": "wikidataId",
             "name": "name",
-            "coodrinate": "coodrinate",
+            "coordinate": "coordinate",
         }
 
         self._wikidata_id = wikidata_id
         self._name = name
-        self._coodrinate = coodrinate
+        self._coordinate = coordinate
 
     @classmethod
     def from_dict(cls, dikt) -> "Location":
@@ -63,6 +66,10 @@ class Location(Model):
         :param wikidata_id: The wikidata_id of this Location.
         :type wikidata_id: str
         """
+        if wikidata_id is None:
+            raise ValueError(
+                "Invalid value for `wikidata_id`, must not be `None`"
+            )  # noqa: E501
 
         self._wikidata_id = wikidata_id
 
@@ -84,26 +91,60 @@ class Location(Model):
         :param name: The name of this Location.
         :type name: str
         """
+        if name is None:
+            raise ValueError(
+                "Invalid value for `name`, must not be `None`"
+            )  # noqa: E501
+        if name is not None and len(name) > 120:
+            raise ValueError(
+                "Invalid value for `name`, length must be less than or equal to `120`"
+            )  # noqa: E501
+        if name is not None and len(name) < 1:
+            raise ValueError(
+                "Invalid value for `name`, length must be greater than or equal to `1`"
+            )  # noqa: E501
+        if name is not None and not re.search(r"^.*\S.*$", name):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `name`, must be a follow pattern or equal to `/^.*\S.*$/`"
+            )  # noqa: E501
 
         self._name = name
 
     @property
-    def coodrinate(self) -> str:
-        """Gets the coodrinate of this Location.
+    def coordinate(self) -> str:
+        """Gets the coordinate of this Location.
 
 
-        :return: The coodrinate of this Location.
+        :return: The coordinate of this Location.
         :rtype: str
         """
-        return self._coodrinate
+        return self._coordinate
 
-    @coodrinate.setter
-    def coodrinate(self, coodrinate: str):
-        """Sets the coodrinate of this Location.
+    @coordinate.setter
+    def coordinate(self, coordinate: str):
+        """Sets the coordinate of this Location.
 
 
-        :param coodrinate: The coodrinate of this Location.
-        :type coodrinate: str
+        :param coordinate: The coordinate of this Location.
+        :type coordinate: str
         """
+        if coordinate is None:
+            raise ValueError(
+                "Invalid value for `coordinate`, must not be `None`"
+            )  # noqa: E501
+        if coordinate is not None and len(coordinate) > 32:
+            raise ValueError(
+                "Invalid value for `coordinate`, length must be less than or equal to `32`"
+            )  # noqa: E501
+        if coordinate is not None and len(coordinate) < 7:
+            raise ValueError(
+                "Invalid value for `coordinate`, length must be greater than or equal to `7`"
+            )  # noqa: E501
+        if coordinate is not None and not re.search(
+            r"^-?\d{1,2}\.\d+,-?\d{1,3}\.\d+$", coordinate
+        ):  # noqa: E501
+            raise ValueError(
+                "Invalid value for `coordinate`, must be a follow pattern or equal to `/^-?\d{1,2}\.\d+,-?\d{1,3}\.\d+$/`"
+            )  # noqa: E501
 
-        self._coodrinate = coodrinate
+        self._coordinate = coordinate
