@@ -64,6 +64,7 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+/.idea/
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/misc.xml
