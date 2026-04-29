@@ -1,3 +1,6 @@
+include config.env
+export
+
 .PHONY: setup lint format typecheck test test-unit test-integration openapi run
 
 # Install all dependencies (runtime + dev) and activate pre-commit hooks.

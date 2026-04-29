@@ -51,7 +51,7 @@ No test makes a real network call to Wikidata or any external service.
 
 ## Regenerating server models
 
-Server models are auto-generated from the remote OpenAPI spec. The pinned spec commit SHA is in `scripts/openapi.sh`.
+Server models are auto-generated from the remote OpenAPI spec. The pinned spec commit SHA is in `config.env` — update it there when adopting a new spec version.
 
 ```bash
 make openapi

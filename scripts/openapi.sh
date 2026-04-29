@@ -2,10 +2,7 @@
 
 # THIS SCRIPT SHOULD RUN FROM THE ROOT FOLDER
 
-# Spec commit SHA — update deliberately when adopting a new spec version.
-# Using a pinned SHA ensures code-generation is reproducible and auditable.
-# Spec repo: https://github.com/TempoGeoPoliticalMap/tgpm-openapi
-SPEC_SHA="775b07803dfbbcc4a7f28666ec4cd4c0495dcf12"
+source config.env
 
 # remove old @generated folder
 rm -rf src/main/@generated
