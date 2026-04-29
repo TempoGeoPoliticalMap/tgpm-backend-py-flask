@@ -3,8 +3,11 @@ import os
 import sys
 from pathlib import Path
 
+import json
+
 import connexion
 import uvicorn
+import yaml
 from flask import redirect
 from SPARQLWrapper.SPARQLExceptions import EndPointInternalError, EndPointNotFound
 
@@ -27,6 +30,10 @@ def main():
 
     app.add_middleware(StripEmptyArrayParams, position=MiddlewarePosition.BEFORE_VALIDATION)
 
+    @app.app.route("/")
+    def root_redirect():
+        return redirect("/ui")
+
     @app.app.route("/health")
     def health():
         return {"status": "ok"}, 200
@@ -35,6 +42,15 @@ def main():
     @app.app.route("/swagger/")
     def swagger_redirect():
         return redirect("/ui")
+
+    @app.app.route("/.well-known/openapi")
+    def well_known_openapi():
+        spec_path = root_path / "@generated/openapi_models/openapi/openapi.yaml"
+        spec = yaml.safe_load(spec_path.read_text())
+        return app.app.response_class(
+            json.dumps(spec),
+            mimetype="application/vnd.oai.openapi+json;version=3.0",
+        )
 
     @app.app.errorhandler(EndPointInternalError)
     @app.app.errorhandler(EndPointNotFound)
