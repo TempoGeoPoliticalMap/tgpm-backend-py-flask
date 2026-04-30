@@ -25,11 +25,9 @@ openapi_models/models/error404.py
 openapi_models/models/error406.py
 openapi_models/models/error429.py
 openapi_models/models/event.py
-openapi_models/models/event_event.py
-openapi_models/models/event_event_list_response_body.py
-openapi_models/models/event_event_time_state_relative_to_now.py
-openapi_models/models/event_event_type.py
 openapi_models/models/event_list_response_body.py
+openapi_models/models/event_time_state_relative_to_now.py
+openapi_models/models/event_type.py
 openapi_models/models/event_type_metadata_item.py
 openapi_models/models/event_type_metadata_list_response_body.py
 openapi_models/models/location.py

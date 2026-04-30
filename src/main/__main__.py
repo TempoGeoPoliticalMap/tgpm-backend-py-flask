@@ -10,6 +10,7 @@ import uvicorn
 import yaml
 from flask import redirect
 from SPARQLWrapper.SPARQLExceptions import EndPointInternalError, EndPointNotFound
+from starlette.middleware.cors import CORSMiddleware
 
 from connexion.middleware import MiddlewarePosition
 
@@ -29,6 +30,16 @@ def main():
     )
 
     app.add_middleware(StripEmptyArrayParams, position=MiddlewarePosition.BEFORE_VALIDATION)
+
+    _raw_origins = os.environ.get("CORS_ALLOWED_ORIGINS", "")
+    allowed_origins = [o.strip() for o in _raw_origins.split(",") if o.strip()] or ["*"]
+    app.add_middleware(
+        CORSMiddleware,
+        position=MiddlewarePosition.BEFORE_ROUTING,
+        allow_origins=allowed_origins,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     @app.app.route("/")
     def root_redirect():

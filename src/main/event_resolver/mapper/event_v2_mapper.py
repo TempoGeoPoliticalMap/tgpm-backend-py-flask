@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 
 from event_resolver.persistence.models.region_country_map import REGION_COUNTRY_QCODES
 from openapi_models.models.country import Country
-from openapi_models.models.event_event import EventEvent
+from openapi_models.models.event import Event
 from openapi_models.models.location import Location
 
 _WIKIDATA_ENTITY_PREFIX = "http://www.wikidata.org/entity/"
@@ -59,8 +59,8 @@ def _resolve_time_state(start_dt_str: str, end_dt_str: str | None) -> str:
     return "ONGOING"
 
 
-def map_binding(binding: dict) -> EventEvent:
-    """Map a SPARQL binding dict to an EventEvent model instance."""
+def map_binding(binding: dict) -> Event:
+    """Map a SPARQL binding dict to an Event model instance."""
     item_uri = binding["item"]["value"]
     wikidata_id = _extract_qcode(item_uri)
     wikidata_url = f"https://www.wikidata.org/wiki/{wikidata_id}"
@@ -91,7 +91,7 @@ def map_binding(binding: dict) -> EventEvent:
 
     region_set: list[str] = list(dict.fromkeys(_QCODE_TO_REGION[i] for i in country_ids if i and i in _QCODE_TO_REGION))
 
-    return EventEvent(
+    return Event(
         type=event_type,
         wikidata_id=wikidata_id,
         wikidata_url=wikidata_url,

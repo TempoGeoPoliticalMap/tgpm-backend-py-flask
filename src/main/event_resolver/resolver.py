@@ -8,7 +8,6 @@ class VersionedResolver(Resolver):
     """Routes connexion operations to controller modules based on operation-ID prefix.
 
     Routing rules (first match wins — order matters):
-      "v1_events_"   → event_resolver.controllers.events_controller
       "v2_events_"   → event_resolver.controllers.events_v2_controller
       "v2_metadata_" → event_resolver.controllers.events_v2_metadata_controller
 
@@ -17,7 +16,6 @@ class VersionedResolver(Resolver):
     """
 
     _ROUTES = [
-        ("v1_events_", "event_resolver.controllers.events_controller"),
         ("v2_events_", "event_resolver.controllers.events_v2_controller"),
         ("v2_metadata_", "event_resolver.controllers.events_v2_metadata_controller"),
     ]

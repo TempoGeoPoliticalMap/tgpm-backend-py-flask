@@ -12,6 +12,11 @@ event data from the **Wikidata SPARQL endpoint** and returns it as paginated JSO
 HTTP client
      │
      ▼
+CORSMiddleware (BEFORE_ROUTING)
+  ├── injects Access-Control-Allow-Origin on every response
+  └── answers preflight OPTIONS before routing
+     │
+     ▼
 connexion (ASGI middleware)
   ├── validates request against openapi.yaml
   ├── routes operationId → controller via VersionedResolver
@@ -27,7 +32,7 @@ Service  (src/main/event_resolver/service/)
   ├── computes pagination math (totalPages, hasNextPage)
   ├── calls storage functions (count + paginated fetch)
   ├── calls mapper for each SPARQL binding
-  └── constructs response body model (EventEventListResponseBody, etc.)
+  └── constructs response body model (EventListResponseBody, etc.)
      │
      ├──────────────────────────────────────────────┐
      ▼                                              ▼
@@ -54,7 +59,8 @@ Mapper                                         SPARQL storage
 | SPARQL storage | `event_resolver/persistence/repository/` | Executes COUNT and paginated SELECT queries against Wikidata |
 | Static models | `event_resolver/persistence/models/` | Q-code enums and region→country maps (no I/O) |
 | Generated models | `@generated/openapi_models/models/` | OpenAPI schema classes — never edit by hand |
-| `__main__.py` | `src/main/__main__.py` | App factory; registers resolver, health route, SPARQL error handler |
+| `CORSMiddleware` | `src/main/__main__.py` | Injects CORS headers; handles preflight OPTIONS before routing |
+| `__main__.py` | `src/main/__main__.py` | App factory; registers CORS middleware, resolver, health route, error handlers |
 
 ## Import constraints
 
@@ -78,7 +84,6 @@ operationId prefix against `_ROUTES` and imports the corresponding controller mo
 
 | Prefix | Controller module |
 |---|---|
-| `v1_events_` | `event_resolver.controllers.events_controller` |
 | `v2_events_` | `event_resolver.controllers.events_v2_controller` |
 | `v2_metadata_` | `event_resolver.controllers.events_v2_metadata_controller` |
 
@@ -95,9 +100,9 @@ connexion validates params → v2_events_get(page=2, page_size=20, types=["WARFA
   → events_v2_service.get_events_v2(...)
       → count_events_v2(filters)         # SPARQL COUNT query → int
       → get_event_dao_list_v2(filters, page=2, page_size=20)  # SPARQL SELECT → list[dict]
-      → map_binding(binding) * N         # each dict → EventEvent instance
+      → map_binding(binding) * N         # each dict → Event instance
       → Pagination(page=2, page_size=20, total_items=..., ...)
-      → EventEventListResponseBody(data=[...], pagination=...)
+      → EventListResponseBody(data=[...], pagination=...)
   → result.to_dict()                     # applies attribute_map for camelCase JSON keys
 HTTP 200  {"data": [...], "pagination": {"page": 2, "pageSize": 20, ...}}
 ```
@@ -108,6 +113,9 @@ HTTP 200  {"data": [...], "pagination": {"page": 2, "pageSize": 20, ...}}
 |---|---|
 | `EndPointInternalError` | 502 — upstream data source unavailable |
 | `EndPointNotFound` | 502 — upstream data source unavailable |
+| `UpstreamUnavailableError` | 502 — upstream data source unavailable |
+| `UpstreamRateLimitError` | 429 — with `Retry-After` header when available |
+| `TimeoutError` | 504 — upstream data source timeout |
 | Unhandled exception | 500 (connexion default) |
 
 The SPARQL error handler is registered in `src/main/__main__.py`.

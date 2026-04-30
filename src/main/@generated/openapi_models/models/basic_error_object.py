@@ -24,13 +24,18 @@ class BasicErrorObject(Model):
         :param source: The source of this BasicErrorObject.  # noqa: E501
         :type source: str
         """
-        self.openapi_types = {"id": str, "code": int, "detail": str, "source": str}
+        self.openapi_types = {
+            'id': str,
+            'code': int,
+            'detail': str,
+            'source': str
+        }
 
         self.attribute_map = {
-            "id": "id",
-            "code": "code",
-            "detail": "detail",
-            "source": "source",
+            'id': 'id',
+            'code': 'code',
+            'detail': 'detail',
+            'source': 'source'
         }
 
         self._id = id
@@ -39,7 +44,7 @@ class BasicErrorObject(Model):
         self._source = source
 
     @classmethod
-    def from_dict(cls, dikt) -> "BasicErrorObject":
+    def from_dict(cls, dikt) -> 'BasicErrorObject':
         """Returns the dict as a model
 
         :param dikt: A dict.

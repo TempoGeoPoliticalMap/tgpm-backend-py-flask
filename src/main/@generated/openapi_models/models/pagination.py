@@ -12,14 +12,7 @@ class Pagination(Model):
     Do not edit the class manually.
     """
 
-    def __init__(
-        self,
-        page=None,
-        page_size=None,
-        total_items=None,
-        total_pages=None,
-        has_next_page=None,
-    ):  # noqa: E501
+    def __init__(self, page=None, page_size=None, total_items=None, total_pages=None, has_next_page=None):  # noqa: E501
         """Pagination - a model defined in OpenAPI
 
         :param page: The page of this Pagination.  # noqa: E501
@@ -34,19 +27,19 @@ class Pagination(Model):
         :type has_next_page: bool
         """
         self.openapi_types = {
-            "page": int,
-            "page_size": int,
-            "total_items": int,
-            "total_pages": int,
-            "has_next_page": bool,
+            'page': int,
+            'page_size': int,
+            'total_items': int,
+            'total_pages': int,
+            'has_next_page': bool
         }
 
         self.attribute_map = {
-            "page": "page",
-            "page_size": "pageSize",
-            "total_items": "totalItems",
-            "total_pages": "totalPages",
-            "has_next_page": "hasNextPage",
+            'page': 'page',
+            'page_size': 'pageSize',
+            'total_items': 'totalItems',
+            'total_pages': 'totalPages',
+            'has_next_page': 'hasNextPage'
         }
 
         self._page = page
@@ -56,7 +49,7 @@ class Pagination(Model):
         self._has_next_page = has_next_page
 
     @classmethod
-    def from_dict(cls, dikt) -> "Pagination":
+    def from_dict(cls, dikt) -> 'Pagination':
         """Returns the dict as a model
 
         :param dikt: A dict.
@@ -85,13 +78,9 @@ class Pagination(Model):
         :type page: int
         """
         if page is None:
-            raise ValueError(
-                "Invalid value for `page`, must not be `None`"
-            )  # noqa: E501
+            raise ValueError("Invalid value for `page`, must not be `None`")  # noqa: E501
         if page is not None and page < 1:  # noqa: E501
-            raise ValueError(
-                "Invalid value for `page`, must be a value greater than or equal to `1`"
-            )  # noqa: E501
+            raise ValueError("Invalid value for `page`, must be a value greater than or equal to `1`")  # noqa: E501
 
         self._page = page
 
@@ -114,17 +103,11 @@ class Pagination(Model):
         :type page_size: int
         """
         if page_size is None:
-            raise ValueError(
-                "Invalid value for `page_size`, must not be `None`"
-            )  # noqa: E501
+            raise ValueError("Invalid value for `page_size`, must not be `None`")  # noqa: E501
         if page_size is not None and page_size > 1000:  # noqa: E501
-            raise ValueError(
-                "Invalid value for `page_size`, must be a value less than or equal to `1000`"
-            )  # noqa: E501
+            raise ValueError("Invalid value for `page_size`, must be a value less than or equal to `1000`")  # noqa: E501
         if page_size is not None and page_size < 1:  # noqa: E501
-            raise ValueError(
-                "Invalid value for `page_size`, must be a value greater than or equal to `1`"
-            )  # noqa: E501
+            raise ValueError("Invalid value for `page_size`, must be a value greater than or equal to `1`")  # noqa: E501
 
         self._page_size = page_size
 
@@ -147,13 +130,9 @@ class Pagination(Model):
         :type total_items: int
         """
         if total_items is None:
-            raise ValueError(
-                "Invalid value for `total_items`, must not be `None`"
-            )  # noqa: E501
+            raise ValueError("Invalid value for `total_items`, must not be `None`")  # noqa: E501
         if total_items is not None and total_items < 0:  # noqa: E501
-            raise ValueError(
-                "Invalid value for `total_items`, must be a value greater than or equal to `0`"
-            )  # noqa: E501
+            raise ValueError("Invalid value for `total_items`, must be a value greater than or equal to `0`")  # noqa: E501
 
         self._total_items = total_items
 
@@ -176,13 +155,9 @@ class Pagination(Model):
         :type total_pages: int
         """
         if total_pages is None:
-            raise ValueError(
-                "Invalid value for `total_pages`, must not be `None`"
-            )  # noqa: E501
+            raise ValueError("Invalid value for `total_pages`, must not be `None`")  # noqa: E501
         if total_pages is not None and total_pages < 0:  # noqa: E501
-            raise ValueError(
-                "Invalid value for `total_pages`, must be a value greater than or equal to `0`"
-            )  # noqa: E501
+            raise ValueError("Invalid value for `total_pages`, must be a value greater than or equal to `0`")  # noqa: E501
 
         self._total_pages = total_pages
 
@@ -205,8 +180,6 @@ class Pagination(Model):
         :type has_next_page: bool
         """
         if has_next_page is None:
-            raise ValueError(
-                "Invalid value for `has_next_page`, must not be `None`"
-            )  # noqa: E501
+            raise ValueError("Invalid value for `has_next_page`, must not be `None`")  # noqa: E501
 
         self._has_next_page = has_next_page

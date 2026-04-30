@@ -6,12 +6,12 @@ This folder contains the living technical reference for the TGPM backend service
 
 ## Contents
 
-| File | Purpose |
-|---|---|
-| [architecture.md](architecture.md) | Layer diagram, component responsibilities, data flow |
-| [sparql-queries.md](sparql-queries.md) | Full SPARQL templates used in `events_v2_storage.py` and `metadata_storage.py` |
-| [wikidata-mappings.md](wikidata-mappings.md) | Event-type Q-code table and region → country Q-code table |
-| [../releases/1.0/dependency-updates.md](../releases/1.0/dependency-updates.md) | Dependency audit: previous pinned versions vs. release 1.0 targets |
+| File                                                                             | Purpose |
+|----------------------------------------------------------------------------------|---|
+| [architecture.md](architecture.md)                                               | Layer diagram, component responsibilities, data flow |
+| [sparql-queries.md](sparql-queries.md)                                           | Full SPARQL templates used in `events_v2_storage.py` and `metadata_storage.py` |
+| [wikidata-mappings.md](wikidata-mappings.md)                                     | Event-type Q-code table and region → country Q-code table |
+| [../releases/1.0.0/dependency-updates.md](../releases/1.0.0/dependency-updates.md) | Dependency audit: previous pinned versions vs. release 1.0 targets |
 
 ## Spec URL
 

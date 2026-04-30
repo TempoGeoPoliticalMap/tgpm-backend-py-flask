@@ -7,7 +7,7 @@ placeholders injected at runtime.
 
 ## Events v2 — main paginated query
 
-**Source:** `src/main/event_resolver/persistence/reposotiry/events_v2_storage.py` — `_MAIN_QUERY_TEMPLATE`
+**Source:** `src/main/event_resolver/persistence/repository/events_v2_storage.py` — `_MAIN_QUERY_TEMPLATE`
 
 ```sparql
 SELECT DISTINCT
@@ -126,7 +126,7 @@ VALUES ?iso3Code { "GBR" "FRA" }
 
 ## Events v2 — COUNT query
 
-**Source:** `src/main/event_resolver/persistence/reposotiry/events_v2_storage.py` — `_COUNT_QUERY_TEMPLATE`
+**Source:** `src/main/event_resolver/persistence/repository/events_v2_storage.py` — `_COUNT_QUERY_TEMPLATE`
 
 ```sparql
 SELECT (COUNT(DISTINCT ?item) AS ?total)
@@ -152,7 +152,7 @@ No `LIMIT`/`OFFSET` — returns the total item count for pagination math.
 
 ## Country codes — paginated query
 
-**Source:** `src/main/event_resolver/persistence/reposotiry/metadata_storage.py` — `_COUNTRY_CODES_QUERY`
+**Source:** `src/main/event_resolver/persistence/repository/metadata_storage.py` — `_COUNTRY_CODES_QUERY`
 
 ```sparql
 SELECT DISTINCT ?iso3 ?countryLabel WHERE {
@@ -183,7 +183,7 @@ When `q` is absent: empty string.
 
 ## Country codes — COUNT query
 
-**Source:** `src/main/event_resolver/persistence/reposotiry/metadata_storage.py` — `_COUNTRY_CODES_COUNT_QUERY`
+**Source:** `src/main/event_resolver/persistence/repository/metadata_storage.py` — `_COUNTRY_CODES_COUNT_QUERY`
 
 ```sparql
 SELECT (COUNT(DISTINCT ?country) AS ?total) WHERE {
