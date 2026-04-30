@@ -4,7 +4,7 @@ import typing
 
 from openapi_models import util
 
-T = typing.TypeVar("T")
+T = typing.TypeVar('T')
 
 
 class Model:
@@ -32,22 +32,18 @@ class Model:
             key = self.attribute_map.get(attr, attr)
             value = getattr(self, attr)
             if isinstance(value, list):
-                result[key] = list(
-                    map(lambda x: x.to_dict() if hasattr(x, "to_dict") else x, value)
-                )
+                result[key] = list(map(
+                    lambda x: x.to_dict() if hasattr(x, "to_dict") else x,
+                    value
+                ))
             elif hasattr(value, "to_dict"):
                 result[key] = value.to_dict()
             elif isinstance(value, dict):
-                result[key] = dict(
-                    map(
-                        lambda item: (
-                            (item[0], item[1].to_dict())
-                            if hasattr(item[1], "to_dict")
-                            else item
-                        ),
-                        value.items(),
-                    )
-                )
+                result[key] = dict(map(
+                    lambda item: (item[0], item[1].to_dict())
+                    if hasattr(item[1], "to_dict") else item,
+                    value.items()
+                ))
             else:
                 result[key] = value
 

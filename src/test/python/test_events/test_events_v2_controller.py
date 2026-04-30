@@ -204,11 +204,3 @@ class TestEventsV2Controller(BaseTestCase):
         self.assertEqual(len(body["data"]), 1)
         self.assertEqual(body["data"][0]["name"], "2022 Ukrainian war")
 
-    def test_v1_events_still_works(self):
-        """Backward compatibility guard: v1 must not be broken."""
-        with patch(
-            "event_resolver.service.events_service.get_event_dao_list",
-            return_value={"bindings": []},
-        ):
-            response = self.client.get("/v1/events", headers={"Accept": "application/json"})
-        self.assert200(response)

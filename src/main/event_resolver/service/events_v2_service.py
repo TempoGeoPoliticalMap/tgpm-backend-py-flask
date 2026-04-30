@@ -7,8 +7,8 @@ from event_resolver.persistence.repository.events_v2_storage import (
     count_events_v2,
     get_event_dao_list_v2,
 )
-from openapi_models.models.event_event_list_response_body import (
-    EventEventListResponseBody,
+from openapi_models.models.event_list_response_body import (
+    EventListResponseBody,
 )
 from openapi_models.models.pagination import Pagination
 
@@ -24,7 +24,7 @@ def get_events_v2(
     countries: list[str] | None = None,
     timeslot_start: str | None = None,
     timeslot_end: str | None = None,
-) -> EventEventListResponseBody:
+) -> EventListResponseBody:
     page = max(page, 1)
     page_size = min(max(page_size, 1), MAX_PAGE_SIZE)
 
@@ -63,4 +63,4 @@ def get_events_v2(
         has_next_page=has_next_page,
     )
 
-    return EventEventListResponseBody(data=events, pagination=pagination)
+    return EventListResponseBody(data=events, pagination=pagination)

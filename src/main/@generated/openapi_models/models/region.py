@@ -15,22 +15,25 @@ class Region(Model):
     """
     allowed enum values
     """
-    EAST_ASIA_AND_PACIFIC = "EAST_ASIA_AND_PACIFIC"
-    EUROPE_AND_CENTRAL_ASIA = "EUROPE_AND_CENTRAL_ASIA"
-    LATIN_AMERICA_AND_CARIBBEAN = "LATIN_AMERICA_AND_CARIBBEAN"
-    MIDDLE_EAST_AND_NORTH_AFRICA = "MIDDLE_EAST_AND_NORTH_AFRICA"
-    NORTH_AMERICA = "NORTH_AMERICA"
-    SOUTH_ASIA = "SOUTH_ASIA"
-    SUB_SAHARAN_AFRICA = "SUB_SAHARAN_AFRICA"
-
+    EAST_ASIA_AND_PACIFIC = 'EAST_ASIA_AND_PACIFIC'
+    EUROPE_AND_CENTRAL_ASIA = 'EUROPE_AND_CENTRAL_ASIA'
+    LATIN_AMERICA_AND_CARIBBEAN = 'LATIN_AMERICA_AND_CARIBBEAN'
+    MIDDLE_EAST_AND_NORTH_AFRICA = 'MIDDLE_EAST_AND_NORTH_AFRICA'
+    NORTH_AMERICA = 'NORTH_AMERICA'
+    SOUTH_ASIA = 'SOUTH_ASIA'
+    SUB_SAHARAN_AFRICA = 'SUB_SAHARAN_AFRICA'
     def __init__(self):  # noqa: E501
-        """Region - a model defined in OpenAPI"""
-        self.openapi_types = {}
+        """Region - a model defined in OpenAPI
 
-        self.attribute_map = {}
+        """
+        self.openapi_types = {
+        }
+
+        self.attribute_map = {
+        }
 
     @classmethod
-    def from_dict(cls, dikt) -> "Region":
+    def from_dict(cls, dikt) -> 'Region':
         """Returns the dict as a model
 
         :param dikt: A dict.

@@ -5,6 +5,7 @@ import unittest
 import connexion
 from connexion.middleware import MiddlewarePosition
 from SPARQLWrapper.SPARQLExceptions import EndPointInternalError, EndPointNotFound
+from starlette.middleware.cors import CORSMiddleware
 
 from event_resolver.middleware import StripEmptyArrayParams
 from event_resolver.persistence.repository.exceptions import (
@@ -36,6 +37,13 @@ def _make_connexion_app():
         specification_dir=_SPEC_DIR,
     )
     app.add_middleware(StripEmptyArrayParams, position=MiddlewarePosition.BEFORE_VALIDATION)
+    app.add_middleware(
+        CORSMiddleware,
+        position=MiddlewarePosition.BEFORE_ROUTING,
+        allow_origins=["*"],
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     @app.app.errorhandler(EndPointInternalError)
     @app.app.errorhandler(EndPointNotFound)

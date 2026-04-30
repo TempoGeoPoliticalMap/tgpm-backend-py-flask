@@ -12,9 +12,7 @@ class Error406(Model):
     Do not edit the class manually.
     """
 
-    def __init__(
-        self, id=None, code=None, detail=None, source=None, status=None, title=None
-    ):  # noqa: E501
+    def __init__(self, id=None, code=None, detail=None, source=None, status=None, title=None):  # noqa: E501
         """Error406 - a model defined in OpenAPI
 
         :param id: The id of this Error406.  # noqa: E501
@@ -31,21 +29,21 @@ class Error406(Model):
         :type title: object
         """
         self.openapi_types = {
-            "id": str,
-            "code": int,
-            "detail": str,
-            "source": str,
-            "status": object,
-            "title": object,
+            'id': str,
+            'code': int,
+            'detail': str,
+            'source': str,
+            'status': object,
+            'title': object
         }
 
         self.attribute_map = {
-            "id": "id",
-            "code": "code",
-            "detail": "detail",
-            "source": "source",
-            "status": "status",
-            "title": "title",
+            'id': 'id',
+            'code': 'code',
+            'detail': 'detail',
+            'source': 'source',
+            'status': 'status',
+            'title': 'title'
         }
 
         self._id = id
@@ -56,7 +54,7 @@ class Error406(Model):
         self._title = title
 
     @classmethod
-    def from_dict(cls, dikt) -> "Error406":
+    def from_dict(cls, dikt) -> 'Error406':
         """Returns the dict as a model
 
         :param dikt: A dict.
