@@ -14,7 +14,7 @@ from event_resolver.persistence.repository.exceptions import (
 logger = logging.getLogger(__name__)
 
 SPARQL_ENDPOINT = "https://query.wikidata.org/sparql"
-SPARQL_USER_AGENT = "TGPM-Backend/1.0 (https://github.com/TempoGeoPoliticalMap; contact@tgpm.org)"
+SPARQL_USER_AGENT = "TGPM-Backend/1.0.0 (https://github.com/TempoGeoPoliticalMap; contact@tgpm.org)"
 SPARQL_TIMEOUT_SECONDS = 45
 
 _COUNTRY_CODES_QUERY = """

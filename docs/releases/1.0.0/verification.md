@@ -3,7 +3,7 @@
 > **Verified by:** Claude Code (claude-sonnet-4-6)
 > **Date:** 2026-04-28
 > **Branch:** `support-v2-events`
-> **Plan:** `docs/releases/1.0/plan.md`
+> **Plan:** `docs/releases/1.0.0/plan.md`
 > **Verdict: RELEASE READY** — all 14 planned steps implemented; deviations are improvements, not regressions.
 
 ---
@@ -240,7 +240,7 @@ These strengthen coverage without conflicting with any plan constraint.
 | `architecture.md` | ✓ present |
 | `sparql-queries.md` | ✓ present |
 | `wikidata-mappings.md` | ✓ present |
-| `dependency-updates.md` | Moved to `docs/releases/1.0/dependency-updates.md`; linked from README |
+| `dependency-updates.md` | Moved to `docs/releases/1.0.0/dependency-updates.md`; linked from README |
 | `agents.md` | Moved to `AGENTS.md` at repo root; README links to it |
 
 The README correctly cross-links both relocated files.
@@ -278,7 +278,7 @@ All deviations are improvements or harmless renames. None regress on a plan requ
 | D1 | Default date range | ±30 days from today | Today's full day (00:00:00–23:59:59) | Intentional refinement (commit `29eacbb`) |
 | D2 | Metadata controller filename | `metadata_controller.py` | `events_v2_metadata_controller.py` | Harmless rename; resolver routes correctly |
 | D3 | `agents.md` location | `docs/technical-design/agents.md` | `AGENTS.md` at repo root | More visible; README links to it |
-| D4 | `dependency-updates.md` location | `docs/technical-design/` | `docs/releases/1.0/` | Logical grouping with other release artefacts |
+| D4 | `dependency-updates.md` location | `docs/technical-design/` | `docs/releases/1.0.0/` | Logical grouping with other release artefacts |
 | D5 | `reposotiry` typo | Preserve in new files | Correct spelling `repository/` used | Fix, not regression |
 | D6 | WARFARE Q-codes | Single `wd:Q71266556` | Three Q-codes (Q71266556, Q198, Q467011) | Broader Wikidata coverage |
 | D7 | Timeout fallback in service | Not specified | Skip-count fallback when COUNT times out | Resilience improvement |
@@ -298,4 +298,4 @@ All deviations are improvements or harmless renames. None regress on a plan requ
 
 ## Overall verdict
 
-**RELEASE READY.** All 14 steps from `docs/releases/1.0/plan.md` are implemented on branch `support-v2-events`. The four new endpoints (`/v2/events`, `/v2/metadata/event-types`, `/v2/metadata/regions`, `/v2/metadata/country-codes`) are backed by complete controller → service → storage → mapper stacks with full unit and integration test coverage. No plan requirement is missing or broken.
+**RELEASE READY.** All 14 steps from `docs/releases/1.0.0/plan.md` are implemented on branch `support-v2-events`. The four new endpoints (`/v2/events`, `/v2/metadata/event-types`, `/v2/metadata/regions`, `/v2/metadata/country-codes`) are backed by complete controller → service → storage → mapper stacks with full unit and integration test coverage. No plan requirement is missing or broken.
