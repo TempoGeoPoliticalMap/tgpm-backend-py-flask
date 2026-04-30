@@ -12,7 +12,7 @@ TGPM Backend is a Python service built on **connexion 3.x** (ASGI, wrapping Flas
 https://raw.githubusercontent.com/TempoGeoPoliticalMap/tgpm-openapi/<SPEC_SHA>/openapi.bundled.yaml
 ```
 
-The pinned `SPEC_SHA` is recorded in `scripts/openapi.sh`. The server runs in a Docker container (`Dockerfile`). Auth (BearerAuth/JWT) is handled at the infrastructure level — never implement token validation in Python code.
+The pinned `SPEC_SHA` is recorded in `config.env`. The server runs in a Docker container (`Dockerfile`). Auth (BearerAuth/JWT) is handled at the infrastructure level — never implement token validation in Python code.
 
 ---
 
@@ -21,7 +21,7 @@ The pinned `SPEC_SHA` is recorded in `scripts/openapi.sh`. The server runs in a 
 ```bash
 make setup             # install dependencies + activate pre-commit hooks (run once after clone)
 make run               # start development server at http://localhost:8080
-make test              # run all 60 tests (unit + integration)
+make test              # run all 95 tests (unit + integration)
 make test-unit         # unit tests only (fast, no network)
 make test-integration  # integration tests only
 make lint              # ruff linter — reports issues, no file changes
@@ -53,7 +53,7 @@ tgpm-backend-py-flask/
     ├── main/
     │   ├── @generated/        ← AUTO-GENERATED — never edit by hand; re-run openapi.sh
     │   │   └── openapi_models/
-    │   │       ├── models/    ← Generated model classes (EventEvent, Pagination, etc.)
+    │   │       ├── models/    ← Generated model classes (Event, Pagination, etc.)
     │   │       └── openapi/   ← openapi.yaml loaded by connexion at runtime
     │   ├── event_resolver/    ← ALL business logic lives here
     │   │   ├── controllers/   ← HTTP layer — one function per operationId in the spec
@@ -63,7 +63,7 @@ tgpm-backend-py-flask/
     │   │   │   ├── models/    ← Static lookup tables (Q-codes, region→country maps)
     │   │   │   └── repository/← SPARQL query functions (COUNT + SELECT)
     │   │   └── resolver.py    ← VersionedResolver: routes operationIds to controllers
-    │   └── __main__.py        ← App entry point: resolver, health route, SPARQL error handler
+    │   └── __main__.py        ← App entry point: CORS middleware, resolver, health route, SPARQL error handler
     └── test/
         └── python/
             ├── unit/          ← Unit tests — no network, all deps mocked
@@ -113,7 +113,6 @@ connexion loads `src/main/@generated/openapi_models/openapi/openapi.yaml` at sta
 
 | operationId prefix | Controller module |
 |---|---|
-| `v1_events_` | `event_resolver.controllers.events_controller` |
 | `v2_events_` | `event_resolver.controllers.events_v2_controller` |
 | `v2_metadata_` | `event_resolver.controllers.events_v2_metadata_controller` |
 
@@ -143,7 +142,6 @@ connexion's `pythonic_params=True` converts camelCase query param names to snake
    - Unit tests in `src/test/python/unit/test_<module>.py` — mock the storage layer.
    - Integration tests in `src/test/python/test_events/test_<resource>_controller.py` — use starlette `TestClient` (`.get()`, `.post()`, etc.), mock the storage layer.
    - No test may make a real network call.
-   - Every integration test class touching `/v2/*` routes must include `test_v1_events_still_works()`.
 9. Run `make test` — all tests must pass.
 10. Run `make lint` and `make format` — all style checks must pass.
 
@@ -160,9 +158,9 @@ HTTP request
         → service calls get_*_dao(filters, page, page_size)  # SELECT → list[dict]
         → service calls mapper for each binding dict
             {"item": {"value": "..."}, "itemLabel": {"value": "..."}, ...}
-            → generated model instance (e.g. EventEvent)
+            → generated model instance (e.g. Event)
         → Pagination model constructed
-        → response body model constructed (e.g. EventEventListResponseBody)
+        → response body model constructed (e.g. EventListResponseBody)
     → controller calls .to_dict()                   # camelCase keys via attribute_map
     → connexion serialises to JSON
 HTTP 200 response
@@ -288,6 +286,6 @@ Never inject unvalidated user input into SPARQL query strings.
 | `map` as function name | Use `map_binding`, not `map`, to avoid shadowing the Python builtin |
 | `pythonic_params=True` | connexion converts camelCase query param names to snake_case for Python function parameters |
 | `base_model.py` camelCase fix | `to_dict()` uses `attribute_map` for JSON keys. Applied by `openapi.sh` — do not hand-revert. |
-| OpenAPI spec URL | Pin to a specific commit SHA in `scripts/openapi.sh` — never use `main` |
+| OpenAPI spec URL | Pin a specific commit SHA in `config.env` (`SPEC_SHA`) — never use `main` |
 | `@generated` is off-limits | Never edit by hand. Run `make openapi` to regenerate. |
 | Wikidata SPARQL rate limits | Keep `LIMIT` ≤ 1000; set `SPARQL_USER_AGENT` and `SPARQL_TIMEOUT_SECONDS` on every call |
